@@ -1,0 +1,30 @@
+<div class="homepage_container">
+    <h1>Paid stay in Fiji for bootcamp graduates! 🏝</h1>
+
+    <div class="beach"><img
+            class="beach"
+            src="../../images/beach.jpg"
+            alt="Beach"
+        /></div>
+
+    {{#if error}}
+        <p class="validation">Please fill out all the fields!</p>
+    {{/if}}
+    <form action="/registration" method="POST">
+        <div class="name-input">
+            <input name="first_name" required placeholder="First Name" />
+            <input name="last_name" required placeholder="Last Name" />
+        </div>
+
+        <canvas></canvas>
+
+        <!-- placeholder for the signature, before implementing the actual canvas thing -->
+        <input
+            type="hidden"
+            name="signature"
+            value="data:image/png;base64,hello"
+        />
+        <button type="submit">Sign petition</button>
+        <script src="script.js"></script>
+    </form>
+</div>

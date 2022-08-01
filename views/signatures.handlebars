@@ -1,0 +1,17 @@
+<div class="signatures-page_container">
+    <h2>Good-hearted people who signed this petition:</h2>
+
+    {{#if signees}}
+        <section class="signees-list">
+            {{#each signees}}
+                <p>{{first_name}}</p>
+                <p>{{last_name}}</p>
+                <p>{{signature}}</p>
+            {{/each}}
+        </section>
+
+        <a href="/">Back to the petition</a>
+    {{else}}
+        <p>Nobody wants to pay for your vacation...</p>
+    {{/if}}
+</div>
