@@ -1,4 +1,3 @@
-const { query } = require("express");
 const spicedPg = require("spiced-pg");
 
 //spiced-pg is a simple wrapper around the node-postgres package (aka pg) that was created for use in this course. Using it ensures that you do not create too many database connections and that the process of deploying your project will be fairly straightforward. When you do this, spiced-pg will create a pool of 10 connections to the specified database. These connections will close after 30 seconds of inactivity but will be reopened when activity resumes. If you call the function again with the same string, no new connections will be created.
@@ -12,7 +11,7 @@ function getSignatures() {
     return db
         .query("SELECT * FROM signatures")
         .then((result) => {
-            //console.log(result.rows);
+            console.log("RESULT", result);
             return result.rows;
         })
         .catch((error) => error);
