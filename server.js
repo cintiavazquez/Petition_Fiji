@@ -40,7 +40,7 @@ const { userInfo } = require("os");
 //The secret is used to generate the second cookie used to verify the integrity of the first cookie.
 app.use(
     cookieSession({
-        secret: SESSION_SECRET,
+        secret: process.env.SESSION_SECRET,
         maxAge: 1000 * 60 * 60 * 24 * 14,
         //this determines how long to store the cookie for
         // In the example above, the cookie will survive two weeks of inactivity.
