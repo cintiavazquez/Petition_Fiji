@@ -1,11 +1,9 @@
 <div class="thank-you-page_container">
     <h1>Thank you for signing the petition,
-        {{user.first_name}}
-        {{user.last_name}}!</h1>
-    <div class="beach"><img
-            class="beach"
-            src="../../images/beach.jpg"
-            alt="Beach"
-        /></div>
+        {{foundUser.first_name}}
+        {{foundUser.last_name}}!</h1>
+        <img src="{{signature}}"></img>
+
     <a href="/signatures">Check who else supports this worthy cause</a>
+    <a href="/profile/edit">Update your profile here!</a>
 </div>

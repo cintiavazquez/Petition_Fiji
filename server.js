@@ -12,14 +12,30 @@ app.use(
     })
 );
 
-const { createSignature, getSignatures, getSignaturesByID } = require("./db");
+const {
+    getSignatures,
+    createSignature,
+    //getSignaturesByID,
+    getSignatureByUserID,
+    createUser,
+    getUserByEmail,
+    login,
+    getUserById,
+    getUserList,
+    createUserProfile,
+    getUserInfo,
+    updateUser,
+    updateUserNoPass,
+    upsertUserProfile,
+} = require("./db");
 
 //const { sign } = require("crypto");
 
 app.use(express.static("images"));
 // Cookie session 🍪
 const cookieSession = require("cookie-session");
-const { SESSION_SECRET } = require("./secrets.json");
+//const { SESSION_SECRET } = require("./secrets.json");
+const { userInfo } = require("os");
 //we can use whatever string we want as session secret
 //The secret is used to generate the second cookie used to verify the integrity of the first cookie.
 app.use(
@@ -32,32 +48,199 @@ app.use(
 );
 
 app.get("/", (request, response) => {
-    console.log("request body", request.body);
-    //🍪
-    console.log("request session", request.session);
-    //the first time we visit the page, the cookie session will be an empty obj
+    response.redirect("/register");
+});
 
-    if (request.session.signatureId) {
-        response.redirect(
-            "/thank-you" /* , { id: require.session.signatureId } */
-        );
+app.get("/register", (request, response) => {
+    //console.log("req body in register", request.body);
+    if (request.session.userId) {
+        response.redirect("/petition");
+        return;
+    }
+    response.render("register");
+});
+
+app.post("/register", (request, response) => {
+    console.log("POST /register", request.body);
+
+    const { first_name, last_name, email, password } = request.body;
+
+    if (
+        !first_name.length ||
+        !last_name.length ||
+        !email.length ||
+        !password.length
+    ) {
+        console.log("Error: not all fields were filled");
+        const error = "error";
+        response.render("register", {
+            error: error,
+        });
         return;
     }
 
-    response.redirect("/registration");
+    createUser({ first_name, last_name, email, password })
+        .then((result) => {
+            console.log("created user: ", result);
+            //🍪
+            request.session.userId = result.id;
+            response.redirect("/profile");
+        })
+        .catch((error) => {
+            console.log("error creating user: ", error);
+            response.status(500).render("/register", {
+                error: error,
+            });
+        });
 });
 
-app.get("/registration", (request, response) => {
-    console.log(request.body);
-    response.render("homepage");
+app.get("/profile", (request, response) => {
+    if (!request.session.userId) {
+        response.redirect("/login");
+        return;
+    }
+    response.render("profile");
 });
 
-app.post("/registration", (request, response) => {
-    console.log("POST /", request.body);
+app.post("/profile", (request, response) => {
+    if (!request.session.userId) {
+        response.redirect("/login");
+        return;
+    }
 
-    // then redirect to the /thank-you page
-    // catch any error, and redirect to the form page in that case
-    const { first_name, last_name, signature } = request.body;
+    let user_id = request.session.userId;
+    let { age, city, homepage } = request.body;
+
+    createUserProfile({ user_id, age, city, homepage })
+        .then((result) => {
+            console.log("created user profile: ", result);
+            response.redirect("/petition");
+        })
+        .catch((error) => {
+            console.log("error creating user: ", error);
+            response.status(500).render("/profile", {
+                error: error,
+            });
+        });
+});
+
+app.get("/profile/edit", (request, response) => {
+    if (!request.session.userId) {
+        response.redirect("/login");
+    }
+    getUserInfo((user_id = request.session.userId))
+        .then((userInfo) => {
+            //console.log("USERINFO", userInfo);
+            response.render("profileEdit", userInfo);
+        })
+        .catch((error) => console.log("error retrieving user info", error));
+});
+
+app.post("/profile/edit", (request, response) => {
+    // when I edit I need to update the user table and the profile table
+    if (!request.session.userId) {
+        response.redirect("/login");
+    }
+    let user_id = request.session.userId;
+    let { first_name, last_name, email, password, age, city, homepage } =
+        request.body;
+
+    upsertUserProfile({ user_id, age, city, homepage })
+        .then((result) => {
+            console.log(result);
+        })
+        .catch((error) => console.log("could not update user", error));
+    if (password === "") {
+        updateUserNoPass({
+            first_name,
+            last_name,
+            email,
+            user_id: request.session.userId,
+        })
+            .then((result) => {
+                console.log(result);
+                response.redirect("/petition");
+            })
+            .catch((error) => console.log("could not update user", error));
+        return;
+    }
+    updateUser({
+        first_name,
+        last_name,
+        email,
+        password,
+        user_id: request.session.userId,
+    })
+        .then((result) => {
+            console.log(result);
+            response.redirect("/petition");
+        })
+        .catch((error) => console.log("could not update user", error));
+});
+
+app.post("/login", (request, response) => {
+    console.log("POST /login", request.body);
+
+    const { email, password } = request.body;
+
+    if (!email.length || !password.length) {
+        console.log("Error: not all fields were filled");
+        const error = "error";
+        response.render("login", {
+            error: error,
+        });
+        return;
+    }
+
+    login({
+        email,
+        password,
+    })
+        .then((foundUser) => {
+            console.log("foundUser", foundUser);
+            //🍪
+            request.session.userId = foundUser.id;
+            request.session.signatureId = foundUser.id;
+            response.redirect("/petition");
+        })
+        .catch((error) => {
+            console.log("error logging in", error);
+            response.render("login", {
+                error: error,
+            });
+        });
+});
+
+app.get("/login", (request, response) => {
+    //console.log("req body in register", request.body);
+    if (request.session.userId) {
+        response.redirect("/petition");
+        return;
+    }
+    response.render("login");
+});
+
+app.post("/petition", (request, response) => {
+    console.log("POST /petition", request.body);
+    let user_id = request.session.userId;
+    console.log("user id", user_id);
+    if (!request.session.userId) {
+        response.redirect("/login");
+        return;
+    }
+
+    const { signature } = request.body;
+
+    if (!signature.length) {
+        console.log("Error: you did not sign!");
+        const error = "error";
+        response.render("homepage", {
+            error: error,
+        });
+        return;
+    }
+    /* const { first_name, last_name, signature } = request.body;
+  
 
     if (!first_name.length || !last_name.length || !signature.length) {
         console.log("Error: not all fields were filled");
@@ -66,9 +249,9 @@ app.post("/registration", (request, response) => {
             error: error,
         });
         return;
-    }
+    } */
 
-    createSignature({ first_name, last_name, signature })
+    createSignature({ user_id, signature })
         .then((result) => {
             console.log("created signature: ", result);
             //🍪
@@ -81,28 +264,67 @@ app.post("/registration", (request, response) => {
         });
 });
 
+app.get("/petition", (request, response) => {
+    console.log("REQ SESSION", request.session);
+    if (!request.session.userId) {
+        response.redirect("/login");
+        return;
+    }
+    if (request.session.signatureId) {
+        response.redirect("/thank-you");
+        return;
+    }
+    response.render("homepage");
+});
+
 app.get("/thank-you", (request, response) => {
+    if (!request.session.userId) {
+        response.redirect("/login");
+        return;
+    }
     if (!request.session.signatureId) {
-        response.redirect("/");
+        response.redirect("/petition");
         return;
     }
     //🍪
-    console.log("request.session.signatureId", request.session.signatureId);
-    getSignaturesByID(request.session.signatureId)
+    // console.log("request.session.signatureId", request.session.signatureId);
+    getUserById(request.session.userId)
+        .then((foundUser) => foundUser)
+        .then((foundUser) =>
+            getSignatureByUserID(request.session.userId)
+                .then(({ signature }) => {
+                    response.render("thank-you", {
+                        signature,
+                        foundUser,
+                    });
+                    console.log(foundUser);
+                })
+                .catch((error) => {
+                    console.log("Error getting signature by ID", error);
+                })
+        )
+        .catch((error) => console.log("error retrieving user", error));
+
+    /* getSignaturesByID(request.session.signatureId)
         .then((user) => {
             console.log("user", user);
             response.render("thank-you", { user });
         })
-        .catch((error) => console.log("Error getting signature by ID", error));
+        .catch((error) => console.log("Error getting signature by ID", error)); */
 });
 app.get("/signatures", (request, response) => {
-    if (!request.session.signatureId) {
-        response.redirect("/");
+    if (!request.session.userId) {
+        response.redirect("/login");
         return;
     }
+    if (!request.session.signatureId) {
+        response.redirect("/petition");
+        return;
+    }
+
     getSignatures()
         .then((signees) => {
-            console.log(signees);
+            console.log("signees", signees);
             response.render("signatures", {
                 signees: signees,
             });
@@ -113,4 +335,31 @@ app.get("/signatures", (request, response) => {
         });
 });
 
-app.listen(8081, () => console.log("listening on http://localhost:8081 🎈!"));
+app.get("/petition/:city", (request, response) => {
+    let city = request.params.city;
+    if (!request.session.userId) {
+        response.redirect("/login");
+        return;
+    }
+    if (!request.session.signatureId) {
+        response.redirect("/petition");
+        return;
+    }
+
+    getSignatures()
+        .then((signees) => {
+            console.log("signees", signees);
+            response.render("cities", {
+                signees: signees,
+                city,
+            });
+        })
+        .catch((error) => {
+            console.log("error displaying signers", error);
+            response.status(404);
+        });
+});
+
+//app.listen(8081, () => console.log("listening on http://localhost:8081 🎈!"));
+const port = process.env.PORT || 8080;
+app.listen(port, () => console.log(`Listening on http://localhost:${port} 🎈`));

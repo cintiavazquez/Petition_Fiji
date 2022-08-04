@@ -59,4 +59,48 @@ function createCity({ name, population, country }) {
 //getCitiesByCountry("Germany");
 //getCitiesByName("Bremen");
 
-module.exports = { getCities, getCitiesByCountry, getCitiesByName, createCity };
+// AUTH
+const users = [
+    {
+        id: 1,
+        name: "User One",
+        email: "user_1@example.com",
+        password: "password_1",
+    },
+    {
+        id: 2,
+        name: "User Two",
+        email: "user_2@example.com",
+        password: "password_2",
+    },
+    {
+        id: 3,
+        name: "User Three",
+        email: "user_3@example.com",
+        password: "password_3",
+    },
+];
+
+function login({ email, password }) {
+    const foundUser = users.find((user) => user.email === email);
+
+    if (!foundUser) {
+        console.log("no email match");
+        return null;
+    }
+
+    if (foundUser.password !== password) {
+        console.log("no password match");
+        return null;
+    }
+
+    return foundUser;
+}
+
+module.exports = {
+    getCities,
+    getCitiesByCountry,
+    getCitiesByName,
+    createCity,
+    login,
+};

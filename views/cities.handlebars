@@ -1,5 +1,5 @@
 <div class="signatures-page_container">
-    <h2>Good-hearted people who signed this petition:</h2>
+    <h2>Good-hearted people from {{city}} who signed this petition:</h2>
 
     {{#if signees}}
         <section class="signees-list">
@@ -8,11 +8,11 @@
                 {{#if homepage}}
                     <a href="{{homepage}}">{{first_name}} {{last_name}}</a>
                     <p>{{age}}</p>
-                    <a href="/petition/{{city}}">{{city}}</a>
+
                 {{else}}
                     <p>{{first_name}} {{last_name}}</p>
                     <p>{{age}}</p>
-                    <a href="/petition/{{city}}">{{city}}</a>
+
                 {{/if}}
 
             {{/each}}

@@ -96,3 +96,8 @@ canvas {
     background-color: rgba(230, 183, 155, 0.282);
     border: 5px solid rgb(230, 183, 155);
 }
+
+a {
+    padding: 0;
+    margin: 0;
+}

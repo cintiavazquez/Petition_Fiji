@@ -1,0 +1,27 @@
+<div class="homepage_container">
+    <h1> 🏝</h1>
+
+    <div class="beach"><img
+            class="beach"
+            src="../../images/beach.jpg"
+            alt="Beach"
+        /></div>
+
+    <form action="/profile" method="POST">
+        <div class="name-input">
+            <input name="age" type="number" placeholder="Age" />
+            <input name="city" placeholder="City" />
+            <input name="homepage" type="url" placeholder="homepage" />
+        </div>
+
+        <button type="submit">Continue</button>
+
+        {{#if error}}
+            <p class="validation">Error: sorry, there was an error when creating
+                your profile</p>
+        {{/if}}
+
+        <a href="/register">Ready to sign? Do it!</a>
+        <script src="script.js"></script>
+    </form>
+</div>

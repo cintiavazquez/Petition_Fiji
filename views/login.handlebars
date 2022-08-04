@@ -1,0 +1,29 @@
+<div class="homepage_container">
+    <h1>Please log in</h1>
+
+    <div class="beach"><img
+            class="beach"
+            src="../../images/beach.jpg"
+            alt="Beach"
+        /></div>
+
+    {{#if error}}
+        <p class="validation">Either you didnt fill all the fields or the
+            information doesnt match any user</p>
+    {{/if}}
+    <form action="/login" method="POST">
+        <div class="name-input">
+            <input name="email" type="email" required placeholder="E-mail" />
+            <input
+                name="password"
+                type="password"
+                required
+                placeholder="Password"
+            />
+        </div>
+
+        <button type="submit">Log in</button>
+        <a href="/register">Not a user yet? Register here</a>
+        <script src="script.js"></script>
+    </form>
+</div>
