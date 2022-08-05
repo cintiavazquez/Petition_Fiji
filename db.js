@@ -11,7 +11,7 @@ const db = spicedPg(
 let db;
 if (!process.env.DATABASE_URL) {
     // we are running locally!
-    //const { DATABASE_USER, DATABASE_PASSWORD } = require("./secrets.json");
+    const { DATABASE_USER, DATABASE_PASSWORD } = require("./secrets.json");
     const DATABASE_NAME = "petition";
     db = spicedPg(
         `postgres:${DATABASE_USER}:${DATABASE_PASSWORD}@localhost:5432/${DATABASE_NAME}`
@@ -90,7 +90,7 @@ function getSignatureByUserID(id) {
     return db
         .query("SELECT * FROM signatures WHERE user_id=$1", [id])
         .then((result) => {
-            console.log("result rows", result.rows);
+            console.log("signature by user id", result.rows);
             return result.rows[0];
         })
         .catch((error) => error);
@@ -178,6 +178,13 @@ function upsertUserProfile({ user_id, age, city, homepage }) {
         .catch((error) => error);
 }
 
+function deleteSignature({ user_id }) {
+    return db
+        .query(`DELETE FROM signatures WHERE user_id=$1`, [user_id])
+        .then((userInfo) => userInfo.rows[0])
+        .catch((error) => error);
+}
+
 module.exports = {
     getSignatures,
     createSignature,
@@ -193,4 +200,5 @@ module.exports = {
     updateUser,
     updateUserNoPass,
     upsertUserProfile,
+    deleteSignature,
 };

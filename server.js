@@ -27,6 +27,7 @@ const {
     updateUser,
     updateUserNoPass,
     upsertUserProfile,
+    deleteSignature,
 } = require("./db");
 
 //const { sign } = require("crypto");
@@ -34,13 +35,17 @@ const {
 app.use(express.static("images"));
 // Cookie session 🍪
 const cookieSession = require("cookie-session");
-//const { SESSION_SECRET } = require("./secrets.json");
 const { userInfo } = require("os");
+
+let { SESSION_SECRET } = require("./secrets.json");
+
 //we can use whatever string we want as session secret
 //The secret is used to generate the second cookie used to verify the integrity of the first cookie.
+
 app.use(
     cookieSession({
-        secret: process.env.SESSION_SECRET,
+        //secret: process.env.SESSION_SECRET,
+        secret: SESSION_SECRET,
         maxAge: 1000 * 60 * 60 * 24 * 14,
         //this determines how long to store the cookie for
         // In the example above, the cookie will survive two weeks of inactivity.
@@ -48,6 +53,7 @@ app.use(
 );
 
 app.get("/", (request, response) => {
+    //response.send("gotten");
     response.redirect("/register");
 });
 
@@ -270,6 +276,7 @@ app.get("/petition", (request, response) => {
         response.redirect("/login");
         return;
     }
+    console.log("sig id in homepage", request.session.signatureId);
     if (request.session.signatureId) {
         response.redirect("/thank-you");
         return;
@@ -301,6 +308,7 @@ app.get("/thank-you", (request, response) => {
                 })
                 .catch((error) => {
                     console.log("Error getting signature by ID", error);
+                    response.end;
                 })
         )
         .catch((error) => console.log("error retrieving user", error));
@@ -311,6 +319,18 @@ app.get("/thank-you", (request, response) => {
             response.render("thank-you", { user });
         })
         .catch((error) => console.log("Error getting signature by ID", error)); */
+});
+
+app.post("/thank-you", (request, response) => {
+    let user_id = request.session.userId;
+    console.log(user_id, "The one im looking for");
+
+    deleteSignature({ user_id })
+        .then(() => {
+            request.session.signatureId = null;
+            response.redirect("/petition");
+        })
+        .catch((error) => console.log("error deleting the signature!", error));
 });
 app.get("/signatures", (request, response) => {
     if (!request.session.userId) {
@@ -361,5 +381,5 @@ app.get("/petition/:city", (request, response) => {
 });
 
 //app.listen(8081, () => console.log("listening on http://localhost:8081 🎈!"));
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8082;
 app.listen(port, () => console.log(`Listening on http://localhost:${port} 🎈`));

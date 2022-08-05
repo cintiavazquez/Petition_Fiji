@@ -76,7 +76,9 @@ form {
     color: rgb(255, 251, 4);
     margin-bottom: 20px;
 }
-
+.thank-you-page_container form {
+    position: relative;
+}
 .signatures-page_container {
     position: absolute;
     left: 50%;

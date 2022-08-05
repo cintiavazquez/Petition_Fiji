@@ -11,14 +11,9 @@
         <p class="validation">Please fill out all the fields!</p>
     {{/if}}
     <form action="/petition" method="POST">
-        {{!  <div class="name-input">
-            <input name="first_name" required placeholder="First Name" />
-            <input name="last_name" required placeholder="Last Name" />
-        </div> }}
 
         <canvas></canvas>
 
-        <!-- placeholder for the signature, before implementing the actual canvas thing -->
         <input type="hidden" name="signature" value="" />
         <button type="submit">Sign petition</button>
         <script src="script.js"></script>
