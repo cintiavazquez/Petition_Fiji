@@ -6,11 +6,6 @@ app.use(express.static(path.join(__dirname, "public")));
 const { engine } = require("express-handlebars");
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
-app.use(
-    express.urlencoded({
-        extended: true,
-    })
-);
 
 const {
     getSignatures,
@@ -30,17 +25,32 @@ const {
     deleteSignature,
 } = require("./db");
 
-//const { sign } = require("crypto");
-
-app.use(express.static("images"));
 // Cookie session 🍪
 const cookieSession = require("cookie-session");
 const { userInfo } = require("os");
 
 let { SESSION_SECRET } = require("./secrets.json");
-
 //we can use whatever string we want as session secret
 //The secret is used to generate the second cookie used to verify the integrity of the first cookie.
+
+//Ⓜ️ middleware
+
+function checkLogin(request, response, next) {
+    if (!request.session.user_id) {
+        console.log("not logged in!");
+        response.redirect("/login");
+        return;
+    }
+    console.log("logged in!");
+    next();
+}
+
+app.use(
+    express.urlencoded({
+        extended: true,
+    })
+);
+app.use(express.static("images"));
 
 app.use(
     cookieSession({
@@ -59,7 +69,7 @@ app.get("/", (request, response) => {
 
 app.get("/register", (request, response) => {
     //console.log("req body in register", request.body);
-    if (request.session.userId) {
+    if (request.session.user_id) {
         response.redirect("/petition");
         return;
     }
@@ -90,12 +100,12 @@ app.post("/register", (request, response) => {
             //console.log("created user: ", result);
             if (result.constraint === "users_email_key") {
                 console.log("HERE !!!!!!!!!!!!!!!");
-                response.status(500).render("/register");
+                response.status(400).render("/register");
                 //, {duplicate: result.constraint,});
                 return;
             }
             //🍪
-            request.session.userId = result.id;
+            request.session.user_id = result.id;
             response.redirect("/profile");
         })
         .catch((error) => {
@@ -105,7 +115,7 @@ app.post("/register", (request, response) => {
 });
 
 app.get("/profile", (request, response) => {
-    if (!request.session.userId) {
+    if (!request.session.user_id) {
         response.redirect("/login");
         return;
     }
@@ -113,12 +123,12 @@ app.get("/profile", (request, response) => {
 });
 
 app.post("/profile", (request, response) => {
-    if (!request.session.userId) {
+    if (!request.session.user_id) {
         response.redirect("/login");
         return;
     }
 
-    let user_id = request.session.userId;
+    let user_id = request.session.user_id;
     let { age, city, homepage } = request.body;
 
     createUserProfile({ user_id, age, city, homepage })
@@ -135,12 +145,12 @@ app.post("/profile", (request, response) => {
 });
 
 app.get("/profile/edit", (request, response) => {
-    if (!request.session.userId) {
+    if (!request.session.user_id) {
         response.redirect("/login");
     }
-    getUserInfo((user_id = request.session.userId))
+    getUserInfo((user_id = request.session.user_id))
         .then((userInfo) => {
-            console.log(request.session.userId);
+            console.log(request.session.user_id);
             console.log("USERINFO", userInfo);
             response.render("profileEdit", userInfo);
         })
@@ -149,10 +159,10 @@ app.get("/profile/edit", (request, response) => {
 
 app.post("/profile/edit", (request, response) => {
     // when I edit I need to update the user table and the profile table
-    if (!request.session.userId) {
+    if (!request.session.user_id) {
         response.redirect("/login");
     }
-    let user_id = request.session.userId;
+    let user_id = request.session.user_id;
     let { first_name, last_name, email, password, age, city, homepage } =
         request.body;
 
@@ -166,10 +176,10 @@ app.post("/profile/edit", (request, response) => {
             first_name,
             last_name,
             email,
-            user_id: request.session.userId,
+            user_id: request.session.user_id,
         })
             .then((result) => {
-                console.log(result);
+                console.log("update no password", result);
                 response.redirect("/petition");
             })
             .catch((error) => console.log("could not update user", error));
@@ -180,7 +190,7 @@ app.post("/profile/edit", (request, response) => {
         last_name,
         email,
         password,
-        user_id: request.session.userId,
+        user_id: request.session.user_id,
     })
         .then((result) => {
             console.log(result);
@@ -210,7 +220,7 @@ app.post("/login", (request, response) => {
         .then((foundUser) => {
             // console.log("foundUser", foundUser);
             //🍪
-            request.session.userId = foundUser.id;
+            request.session.user_id = foundUser.id;
             request.session.signatureId = foundUser.id;
             response.redirect("/petition");
         })
@@ -224,7 +234,7 @@ app.post("/login", (request, response) => {
 
 app.get("/login", (request, response) => {
     //console.log("req body in register", request.body);
-    if (request.session.userId) {
+    if (request.session.user_id) {
         response.redirect("/petition");
         return;
     }
@@ -233,9 +243,9 @@ app.get("/login", (request, response) => {
 
 app.post("/petition", (request, response) => {
     console.log("POST /petition", request.body);
-    let user_id = request.session.userId;
+    let user_id = request.session.user_id;
     //console.log("user id", user_id);
-    if (!request.session.userId) {
+    if (!request.session.user_id) {
         response.redirect("/login");
         return;
     }
@@ -264,7 +274,7 @@ app.post("/petition", (request, response) => {
 
     createSignature({ user_id, signature })
         .then((result) => {
-            //console.log("created signature: ", result);
+            console.log("created signature: ", result);
             //🍪
             request.session.signatureId = result.id;
             response.redirect("/thank-you");
@@ -276,7 +286,7 @@ app.post("/petition", (request, response) => {
 });
 
 app.get("/petition", (request, response) => {
-    if (!request.session.userId) {
+    if (!request.session.user_id) {
         response.redirect("/login");
         return;
     }
@@ -289,7 +299,7 @@ app.get("/petition", (request, response) => {
 });
 
 app.get("/thank-you", (request, response) => {
-    if (!request.session.userId) {
+    if (!request.session.user_id) {
         response.redirect("/login");
         return;
     }
@@ -299,10 +309,10 @@ app.get("/thank-you", (request, response) => {
     }
     //🍪
     // console.log("request.session.signatureId", request.session.signatureId);
-    getUserById(request.session.userId)
+    getUserById(request.session.user_id)
         .then((foundUser) => foundUser)
         .then((foundUser) =>
-            getSignatureByUserID(request.session.userId)
+            getSignatureByUserID(request.session.user_id)
                 .then(({ signature }) => {
                     response.render("thank-you", {
                         signature,
@@ -326,7 +336,7 @@ app.get("/thank-you", (request, response) => {
 });
 
 app.post("/thank-you", (request, response) => {
-    let user_id = request.session.userId;
+    let user_id = request.session.user_id;
     deleteSignature({ user_id })
         .then(() => {
             request.session.signatureId = null;
@@ -336,11 +346,11 @@ app.post("/thank-you", (request, response) => {
 });
 
 app.post("/logout", (request, response) => {
-    request.session.userId = null;
+    request.session.user_id = null;
     response.redirect("/");
 });
 app.get("/signatures", (request, response) => {
-    if (!request.session.userId) {
+    if (!request.session.user_id) {
         response.redirect("/login");
         return;
     }
@@ -364,7 +374,7 @@ app.get("/signatures", (request, response) => {
 
 app.get("/petition/:city", (request, response) => {
     let city = request.params.city;
-    if (!request.session.userId) {
+    if (!request.session.user_id) {
         response.redirect("/login");
         return;
     }
