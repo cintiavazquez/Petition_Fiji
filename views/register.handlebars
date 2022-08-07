@@ -8,8 +8,10 @@
         /></div>
 
     {{#if error}}
-        <p class="validation">Either you didnt fill all the fields or the user
-            is duplicate</p>
+        <p class="validation">Please, fill all the fields</p>
+    {{/if}}
+    {{#if duplicate}}
+        <p class="validation">This user already exists</p>
     {{/if}}
     <form action="/register" method="POST">
         <div class="name-input">

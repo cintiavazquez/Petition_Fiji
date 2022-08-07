@@ -45,7 +45,7 @@ let { SESSION_SECRET } = require("./secrets.json");
 app.use(
     cookieSession({
         //secret: process.env.SESSION_SECRET,
-        secret: SESSION_SECRET,
+        secret: SESSION_SECRET || process.env.SESSION_SECRET,
         maxAge: 1000 * 60 * 60 * 24 * 14,
         //this determines how long to store the cookie for
         // In the example above, the cookie will survive two weeks of inactivity.
@@ -87,16 +87,20 @@ app.post("/register", (request, response) => {
 
     createUser({ first_name, last_name, email, password })
         .then((result) => {
-            console.log("created user: ", result);
+            //console.log("created user: ", result);
+            if (result.constraint === "users_email_key") {
+                console.log("HERE !!!!!!!!!!!!!!!");
+                response.status(500).render("/register");
+                //, {duplicate: result.constraint,});
+                return;
+            }
             //🍪
             request.session.userId = result.id;
             response.redirect("/profile");
         })
         .catch((error) => {
             console.log("error creating user: ", error);
-            response.status(500).render("/register", {
-                error: error,
-            });
+            response.status(500);
         });
 });
 
@@ -136,7 +140,8 @@ app.get("/profile/edit", (request, response) => {
     }
     getUserInfo((user_id = request.session.userId))
         .then((userInfo) => {
-            //console.log("USERINFO", userInfo);
+            console.log(request.session.userId);
+            console.log("USERINFO", userInfo);
             response.render("profileEdit", userInfo);
         })
         .catch((error) => console.log("error retrieving user info", error));
@@ -203,7 +208,7 @@ app.post("/login", (request, response) => {
         password,
     })
         .then((foundUser) => {
-            console.log("foundUser", foundUser);
+            // console.log("foundUser", foundUser);
             //🍪
             request.session.userId = foundUser.id;
             request.session.signatureId = foundUser.id;
@@ -229,7 +234,7 @@ app.get("/login", (request, response) => {
 app.post("/petition", (request, response) => {
     console.log("POST /petition", request.body);
     let user_id = request.session.userId;
-    console.log("user id", user_id);
+    //console.log("user id", user_id);
     if (!request.session.userId) {
         response.redirect("/login");
         return;
@@ -240,7 +245,7 @@ app.post("/petition", (request, response) => {
     if (!signature.length) {
         console.log("Error: you did not sign!");
         const error = "error";
-        response.render("homepage", {
+        response.render("petition", {
             error: error,
         });
         return;
@@ -251,7 +256,7 @@ app.post("/petition", (request, response) => {
     if (!first_name.length || !last_name.length || !signature.length) {
         console.log("Error: not all fields were filled");
         const error = "error";
-        response.render("homepage", {
+        response.render("petition", {
             error: error,
         });
         return;
@@ -259,7 +264,7 @@ app.post("/petition", (request, response) => {
 
     createSignature({ user_id, signature })
         .then((result) => {
-            console.log("created signature: ", result);
+            //console.log("created signature: ", result);
             //🍪
             request.session.signatureId = result.id;
             response.redirect("/thank-you");
@@ -271,17 +276,16 @@ app.post("/petition", (request, response) => {
 });
 
 app.get("/petition", (request, response) => {
-    console.log("REQ SESSION", request.session);
     if (!request.session.userId) {
         response.redirect("/login");
         return;
     }
-    console.log("sig id in homepage", request.session.signatureId);
+    console.log("sig id in petition", request.session.signatureId);
     if (request.session.signatureId) {
         response.redirect("/thank-you");
         return;
     }
-    response.render("homepage");
+    response.render("petition");
 });
 
 app.get("/thank-you", (request, response) => {
@@ -323,14 +327,17 @@ app.get("/thank-you", (request, response) => {
 
 app.post("/thank-you", (request, response) => {
     let user_id = request.session.userId;
-    console.log(user_id, "The one im looking for");
-
     deleteSignature({ user_id })
         .then(() => {
             request.session.signatureId = null;
             response.redirect("/petition");
         })
         .catch((error) => console.log("error deleting the signature!", error));
+});
+
+app.post("/logout", (request, response) => {
+    request.session.userId = null;
+    response.redirect("/");
 });
 app.get("/signatures", (request, response) => {
     if (!request.session.userId) {
@@ -368,7 +375,7 @@ app.get("/petition/:city", (request, response) => {
 
     getSignatures()
         .then((signees) => {
-            console.log("signees", signees);
+            //console.log("signees", signees);
             response.render("cities", {
                 signees: signees,
                 city,

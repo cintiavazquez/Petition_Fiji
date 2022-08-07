@@ -23,7 +23,6 @@ if (!process.env.DATABASE_URL) {
 
 //AUTH 🔑
 const bcrypt = require("bcryptjs");
-
 // this function generates first a 'salt'
 // i.e. a string prepended to the actual hash that makes potential guessing more complicated
 // for attackers,
@@ -40,13 +39,19 @@ function createUser({ first_name, last_name, email, password }) {
                 [first_name, last_name, email, password_hash]
             )
             .then((result) => result.rows[0])
-            .catch((error) => error);
+            .catch((error) => {
+                return error;
+            });
     });
 }
 
 function createUserProfile({ user_id, age, city, homepage }) {
     if (age === "") {
         age = 0;
+    }
+    if (city === "" || !homepage === "") {
+        city = null;
+        homepage = null;
     }
     return db
         .query(
