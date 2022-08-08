@@ -91,9 +91,9 @@ function getUserById(id) {
         .catch((error) => error);
 }
 
-function getSignatureByUserID(id) {
+function getSignatureByUserID(user_id) {
     return db
-        .query("SELECT * FROM signatures WHERE user_id=$1", [id])
+        .query("SELECT * FROM signatures WHERE user_id=$1", [user_id])
         .then((result) => {
             console.log("signature by user id", result.rows);
             return result.rows[0];
@@ -190,6 +190,21 @@ function deleteSignature({ user_id }) {
         .catch((error) => error);
 }
 
+function getSignaturesByCity(city) {
+    return db
+        .query(
+            `
+    SELECT * FROM users
+    JOIN signatures ON signatures.user_id = users.id
+    FULL JOIN user_profiles ON user_profiles.user_id = users.id
+    WHERE signatures.signature IS NOT NULL
+    AND user_profiles.city ILIKE $1`,
+            [city]
+        )
+        .then((result) => result.rows)
+        .catch((error) => error);
+}
+
 module.exports = {
     getSignatures,
     createSignature,
@@ -206,4 +221,5 @@ module.exports = {
     updateUserNoPass,
     upsertUserProfile,
     deleteSignature,
+    getSignaturesByCity,
 };

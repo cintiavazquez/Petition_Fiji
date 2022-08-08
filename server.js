@@ -23,6 +23,7 @@ const {
     updateUserNoPass,
     upsertUserProfile,
     deleteSignature,
+    getSignaturesByCity,
 } = require("./db");
 
 // Cookie session 🍪
@@ -33,9 +34,9 @@ let { SESSION_SECRET } = require("./secrets.json");
 //we can use whatever string we want as session secret
 //The secret is used to generate the second cookie used to verify the integrity of the first cookie.
 
-//Ⓜ️ middleware
+//Ⓜ️ middleware, not implemented yet
 
-function checkLogin(request, response, next) {
+/* function checkLogin(request, response, next) {
     if (!request.session.user_id) {
         console.log("not logged in!");
         response.redirect("/login");
@@ -43,7 +44,18 @@ function checkLogin(request, response, next) {
     }
     console.log("logged in!");
     next();
-}
+} */
+
+/* function checkSignature(request, response, next) {
+    getSignatureByUserId(request.session.userID).then((signature) => {
+        if (!signature) {
+            console.log('no signature!');
+            response.redirect('/');
+            return;
+        }
+        next();
+    });
+} */
 
 app.use(
     express.urlencoded({
@@ -218,7 +230,7 @@ app.post("/login", (request, response) => {
         password,
     })
         .then((foundUser) => {
-            // console.log("foundUser", foundUser);
+            console.log("foundUser", foundUser);
             //🍪
             request.session.user_id = foundUser.id;
             request.session.signatureId = foundUser.id;
@@ -383,7 +395,7 @@ app.get("/petition/:city", (request, response) => {
         return;
     }
 
-    getSignatures()
+    getSignaturesByCity(city)
         .then((signees) => {
             //console.log("signees", signees);
             response.render("cities", {
@@ -398,5 +410,5 @@ app.get("/petition/:city", (request, response) => {
 });
 
 //app.listen(8081, () => console.log("listening on http://localhost:8081 🎈!"));
-const port = process.env.PORT || 8082;
+const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on http://localhost:${port} 🎈`));
