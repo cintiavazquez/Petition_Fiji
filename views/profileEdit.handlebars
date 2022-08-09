@@ -5,7 +5,7 @@
         <p class="validation">Either you didnt fill all the fields or the
             information doesnt match any user</p>
     {{/if}}
-    <form action="/profile/edit" method="POST">
+    <form class="edit_form" action="/profile/edit" method="POST">
        <div class="name-input">
             <input name="first_name" required value="{{first_name}}" />
             <input name="last_name" required value="{{last_name}}" />
