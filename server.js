@@ -69,7 +69,7 @@ app.use(
         extended: true,
     })
 );
-app.use(express.static("images"));
+//app.use(express.static("images"));
 
 app.use(
     cookieSession({
