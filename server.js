@@ -233,7 +233,8 @@ app.post("/login", (request, response) => {
             console.log("foundUser", foundUser);
             //🍪
             request.session.user_id = foundUser.id;
-            request.session.signatureId = foundUser.id;
+            /* request.session.signatureId = foundUser.id; */
+            request.session.signatureId = !!foundUser.signature;
             response.redirect("/petition");
         })
         .catch((error) => {
@@ -321,13 +322,15 @@ app.get("/thank-you", (request, response) => {
     }
     //🍪
     // console.log("request.session.signatureId", request.session.signatureId);
+    console.log(request.session.user_id);
     getUserById(request.session.user_id)
         .then((foundUser) => foundUser)
         .then((foundUser) =>
             getSignatureByUserID(request.session.user_id)
-                .then(({ signature }) => {
+                .then((result) => {
+                    console.log(result, "RESULT");
                     response.render("thank-you", {
-                        signature,
+                        signature: result.signature,
                         foundUser,
                     });
                     console.log(foundUser);
@@ -358,9 +361,10 @@ app.post("/thank-you", (request, response) => {
 });
 
 app.post("/logout", (request, response) => {
-    request.session.user_id = null;
+    request.session = null;
     response.redirect("/");
 });
+
 app.get("/signatures", (request, response) => {
     if (!request.session.user_id) {
         response.redirect("/login");

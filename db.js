@@ -80,7 +80,14 @@ function login({ email, password }) {
 }
 function getUserByEmail(email) {
     return db
-        .query("SELECT * FROM users WHERE email=$1", [email])
+        .query(
+            `SELECT * 
+        FROM users 
+        FULL OUTER JOIN signatures
+        ON users.id=signatures.user_id 
+        WHERE email=$1`,
+            [email]
+        )
         .then((result) => result.rows[0])
         .catch((error) => error);
 }
