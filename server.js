@@ -30,7 +30,14 @@ const {
 const cookieSession = require("cookie-session");
 const { userInfo } = require("os");
 
-let { SESSION_SECRET } = require("./secrets.json");
+//let { SESSION_SECRET } = require("./secrets.json");
+let secrets;
+if (process.env.NODE_ENV == "production") {
+    secrets = process.env; // in prod the secrets are environment variables
+} else {
+    secrets = require("./secrets"); // secrets.json is in .gitignore
+}
+
 //we can use whatever string we want as session secret
 //The secret is used to generate the second cookie used to verify the integrity of the first cookie.
 
@@ -67,7 +74,7 @@ app.use(express.static("images"));
 app.use(
     cookieSession({
         //secret: process.env.SESSION_SECRET,
-        secret: SESSION_SECRET || process.env.SESSION_SECRET,
+        secret: secrets.SESSION_SECRET,
         maxAge: 1000 * 60 * 60 * 24 * 14,
         //this determines how long to store the cookie for
         // In the example above, the cookie will survive two weeks of inactivity.
