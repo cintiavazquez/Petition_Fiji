@@ -28,7 +28,7 @@ const {
 
 // Cookie session 🍪
 const cookieSession = require("cookie-session");
-const { userInfo } = require("os");
+// const { userInfo } = require("os");
 
 //let { SESSION_SECRET } = require("./secrets.json");
 let secrets;
@@ -37,9 +37,6 @@ if (process.env.NODE_ENV == "production") {
 } else {
     secrets = require("./secrets"); // secrets.json is in .gitignore
 }
-
-//we can use whatever string we want as session secret
-//The secret is used to generate the second cookie used to verify the integrity of the first cookie.
 
 //Ⓜ️ middleware, not implemented yet
 
@@ -144,8 +141,7 @@ app.post("/profile", (request, response) => {
     let { age, city, homepage } = request.body;
 
     createUserProfile({ user_id, age, city, homepage })
-        .then((result) => {
-            console.log("created user profile: ", result);
+        .then(() => {
             response.redirect("/petition");
         })
         .catch((error) => {
@@ -162,7 +158,6 @@ app.get("/profile/edit", (request, response) => {
     }
     getUserInfo({ user_id: request.session.user_id })
         .then((userInfo) => {
-            console.log("USERINFO", userInfo);
             response.render("profileEdit", userInfo);
         })
         .catch((error) => {
@@ -187,7 +182,10 @@ app.post("/profile/edit", (request, response) => {
             console.log(result);
         })
         .catch((error) =>
-            console.log("could not update user in upsertUserProfile", error)
+            console.log(
+                "/profile/edit: could not update user in upsertUserProfile",
+                error
+            )
         );
 
     if (password === "") {
@@ -197,12 +195,14 @@ app.post("/profile/edit", (request, response) => {
             email,
             user_id: request.session.user_id,
         })
-            .then((result) => {
-                console.log("update no password", result);
+            .then(() => {
                 response.redirect("/petition");
             })
             .catch((error) =>
-                console.log("could not update user in updateUserNoPass ", error)
+                console.log(
+                    "/profile/edit: could not update user in updateUserNoPass ",
+                    error
+                )
             );
         return;
     }
@@ -248,7 +248,6 @@ app.post("/login", (request, response) => {
 });
 
 app.get("/login", (request, response) => {
-    //console.log("req body in register", request.body);
     if (request.session.user_id) {
         response.redirect("/petition");
         return;
@@ -293,7 +292,6 @@ app.get("/petition", (request, response) => {
         response.redirect("/login");
         return;
     }
-    console.log("sig id in petition", request.session.signatureId);
 
     if (request.session.signatureId) {
         response.redirect("/thank-you");
@@ -321,20 +319,16 @@ app.get("/thank-you", (request, response) => {
         response.redirect("/petition");
         return;
     }
-    //🍪
-    // console.log("request.session.signatureId", request.session.signatureId);
 
     getUserById(request.session.user_id)
         .then((foundUser) => foundUser)
         .then((foundUser) =>
             getSignatureByUserID(request.session.user_id)
                 .then((result) => {
-                    console.log(result, "RESULT");
                     response.render("thank-you", {
                         signature: result.signature,
                         foundUser,
                     });
-                    console.log(foundUser);
                 })
                 .catch((error) => {
                     console.log("Error getting signature by ID", error);
@@ -358,7 +352,9 @@ app.post("/thank-you", (request, response) => {
             request.session.signatureId = null;
             response.redirect("/petition");
         })
-        .catch((error) => console.log("error deleting the signature!", error));
+        .catch((error) =>
+            console.log("/thank-you: error deleting the signature", error)
+        );
 });
 
 app.post("/logout", (request, response) => {
@@ -378,13 +374,12 @@ app.get("/signatures", (request, response) => {
 
     getSignatures()
         .then((signees) => {
-            console.log("signees", signees);
             response.render("signatures", {
                 signees: signees,
             });
         })
         .catch((error) => {
-            console.log("error displaying signatures", error);
+            console.log("/signatures: error displaying signatures", error);
             response.status(404);
         });
 });
@@ -408,7 +403,7 @@ app.get("/petition/:city", (request, response) => {
             });
         })
         .catch((error) => {
-            console.log("error displaying signers", error);
+            console.log("/petition/:city: error displaying signers", error);
             response.status(404);
         });
 });
