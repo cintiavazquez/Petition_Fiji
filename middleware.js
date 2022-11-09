@@ -1,3 +1,5 @@
+const { getSignatureByUserId } = require("./db");
+
 function checkLogin(request, response, next) {
     if (!request.session.user_id) {
         response.redirect("/login");
@@ -6,4 +8,12 @@ function checkLogin(request, response, next) {
     next();
 }
 
-module.exports = { checkLogin };
+function checkSignature(request, response, next) {
+    if (!request.session.signatureId) {
+        response.redirect("/petition");
+        return;
+    }
+    next();
+}
+
+module.exports = { checkLogin, checkSignature };

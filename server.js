@@ -26,7 +26,11 @@ const {
     getSignaturesByCity,
 } = require("./db");
 
-const { checkLogin } = require("./middleware");
+const {
+    checkLogin,
+    getSignatureByUserId,
+    checkSignature,
+} = require("./middleware");
 
 // Cookie session 🍪
 const cookieSession = require("cookie-session");
@@ -41,17 +45,6 @@ if (process.env.NODE_ENV == "production") {
 }
 
 //Ⓜ️ middleware, not implemented yet
-
-/* function checkSignature(request, response, next) {
-    getSignatureByUserId(request.session.userID).then((signature) => {
-        if (!signature) {
-            console.log('no signature!');
-            response.redirect('/');
-            return;
-        }
-        next();
-    });
-}  */
 
 app.use(
     express.urlencoded({
@@ -275,12 +268,7 @@ app.get("/petition", checkLogin, (request, response) => {
         });
 });
 
-app.get("/thank-you", checkLogin, (request, response) => {
-    if (!request.session.signatureId) {
-        response.redirect("/petition");
-        return;
-    }
-
+app.get("/thank-you", checkLogin, checkSignature, (request, response) => {
     getUserById(request.session.user_id)
         .then((foundUser) => foundUser)
         .then((foundUser) =>
@@ -297,13 +285,6 @@ app.get("/thank-you", checkLogin, (request, response) => {
                 })
         )
         .catch((error) => console.log("error retrieving user", error));
-
-    /* getSignaturesByID(request.session.signatureId)
-        .then((user) => {
-            console.log("user", user);
-            response.render("thank-you", { user });
-        })
-        .catch((error) => console.log("Error getting signature by ID", error)); */
 });
 
 app.post("/thank-you", (request, response) => {
@@ -323,12 +304,7 @@ app.post("/logout", (request, response) => {
     response.redirect("/");
 });
 
-app.get("/signatures", checkLogin, (request, response) => {
-    if (!request.session.signatureId) {
-        response.redirect("/petition");
-        return;
-    }
-
+app.get("/signatures", checkLogin, checkSignature, (request, response) => {
     getSignatures()
         .then((signees) => {
             response.render("signatures", {
@@ -341,13 +317,8 @@ app.get("/signatures", checkLogin, (request, response) => {
         });
 });
 
-app.get("/petition/:city", checkLogin, (request, response) => {
+app.get("/petition/:city", checkLogin, checkSignature, (request, response) => {
     let city = request.params.city;
-
-    if (!request.session.signatureId) {
-        response.redirect("/petition");
-        return;
-    }
 
     getSignaturesByCity(city)
         .then((signees) => {
