@@ -112,19 +112,17 @@ app.post("/register", (request, response) => {
 
     createUser({ first_name, last_name, email, password })
         .then((result) => {
-            if (result.constraint === "users_email_key") {
-                console.log("HERE !!!!!!!!!!!!!!!");
-                response.status(400).render("/register");
-                //, {duplicate: result.constraint,});
-                return;
-            }
             //🍪
             request.session.user_id = result.id;
             response.redirect("/profile");
         })
         .catch((error) => {
             console.log("error creating user: ", error);
-            response.status(500);
+            if (error.constraint === "users_email_key") {
+                response
+                    .status(409)
+                    .render("register", { duplicate: error.constraint });
+            }
         });
 });
 
