@@ -334,7 +334,7 @@ app.get("/thank-you", (request, response) => {
     getUserById(request.session.user_id)
         .then((foundUser) => foundUser)
         .then((foundUser) =>
-            getSignatureByUserID(request.session.user_id)
+            getSignatureByUserID(request.session.user_i)
                 .then((result) => {
                     console.log(result, "RESULT");
                     response.render("thank-you", {
@@ -345,7 +345,7 @@ app.get("/thank-you", (request, response) => {
                 })
                 .catch((error) => {
                     console.log("Error getting signature by ID", error);
-                    response.render(500);
+                    response.render("500");
                 })
         )
         .catch((error) => console.log("error retrieving user", error));
