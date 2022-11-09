@@ -167,13 +167,16 @@ app.get("/profile/edit", (request, response) => {
     if (!request.session.user_id) {
         response.redirect("/login");
     }
-    getUserInfo((user_id = request.session.user_id))
+    getUserInfo({ user_id: request.session.user_id })
         .then((userInfo) => {
             console.log(request.session.user_id);
             console.log("USERINFO", userInfo);
             response.render("profileEdit", userInfo);
         })
-        .catch((error) => console.log("error retrieving user info", error));
+        .catch((error) => {
+            console.log("/profile/edit: error retrieving user info", error);
+            response.render("500");
+        });
 });
 
 app.post("/profile/edit", (request, response) => {
@@ -237,10 +240,7 @@ app.post("/login", (request, response) => {
         password,
     })
         .then((foundUser) => {
-            console.log("foundUser", foundUser);
-            //🍪
             request.session.user_id = foundUser.id;
-            /* request.session.signatureId = foundUser.id; */
             request.session.signatureId = !!foundUser.signature;
             response.redirect("/petition");
         })
@@ -311,6 +311,7 @@ app.get("/petition", (request, response) => {
         return;
     }
     console.log("sig id in petition", request.session.signatureId);
+
     if (request.session.signatureId) {
         response.redirect("/thank-you");
         return;
@@ -344,7 +345,7 @@ app.get("/thank-you", (request, response) => {
                 })
                 .catch((error) => {
                     console.log("Error getting signature by ID", error);
-                    response.end;
+                    response.render(500);
                 })
         )
         .catch((error) => console.log("error retrieving user", error));

@@ -38,10 +38,7 @@ function createUser({ first_name, last_name, email, password }) {
                 "INSERT INTO users (first_name, last_name, email, password_hash)  VALUES ($1, $2, $3, $4) RETURNING *",
                 [first_name, last_name, email, password_hash]
             )
-            .then((result) => result.rows[0])
-            .catch((error) => {
-                return error;
-            });
+            .then((result) => result.rows[0]);
     });
 }
 
@@ -58,8 +55,7 @@ function createUserProfile({ user_id, age, city, homepage }) {
             "INSERT INTO user_profiles (user_id, age, city, homepage)  VALUES ($1, $2, $3, $4) RETURNING *",
             [user_id, age, city, homepage]
         )
-        .then((result) => result.rows[0])
-        .catch((error) => error);
+        .then((result) => result.rows[0]);
 }
 
 function login({ email, password }) {
@@ -88,14 +84,12 @@ function getUserByEmail(email) {
         WHERE email=$1`,
             [email]
         )
-        .then((result) => result.rows[0])
-        .catch((error) => error);
+        .then((result) => result.rows[0]);
 }
 function getUserById(id) {
     return db
         .query("SELECT * FROM users WHERE id=$1", [id])
-        .then((result) => result.rows[0])
-        .catch((error) => error);
+        .then((result) => result.rows[0]);
 }
 
 function getSignatureByUserID(user_id) {
@@ -103,9 +97,11 @@ function getSignatureByUserID(user_id) {
         .query("SELECT * FROM signatures WHERE user_id=$1", [user_id])
         .then((result) => {
             console.log("signature by user id", result.rows);
+            if (!result.rows.length) {
+                throw new Error("no signature found");
+            }
             return result.rows[0];
-        })
-        .catch((error) => error);
+        });
 }
 
 //For the signatures page: we want only users who have signed, and we want both users with the minimal info and with the extra info
@@ -119,8 +115,7 @@ function getSignatures() {
         WHERE signatures.signature IS NOT NULL
     `
         )
-        .then((result) => result.rows)
-        .catch((error) => error);
+        .then((result) => result.rows);
 }
 
 function createSignature({ user_id, signature }) {
@@ -131,12 +126,11 @@ function createSignature({ user_id, signature }) {
     RETURNING *`,
             [user_id, signature]
         )
-        .then((result) => result.rows[0])
-        .catch((error) => error);
+        .then((result) => result.rows[0]);
 }
 
 //populating the edit profile form
-function getUserInfo(user_id) {
+function getUserInfo({ user_id }) {
     return db
         .query(
             `SELECT users.first_name, users.last_name, users.email, user_profiles.*
@@ -146,8 +140,12 @@ function getUserInfo(user_id) {
             WHERE user_id=$1`,
             [user_id]
         )
-        .then((userInfo) => userInfo.rows[0])
-        .catch((error) => error);
+        .then((userInfo) => {
+            if (!userInfo.rows.length) {
+                throw new Error("No info found for this user");
+            }
+            return userInfo.rows[0];
+        });
 }
 
 //"upsert" - we want to insert a row if one does not already exist and update it if it does. Postgres has syntax that accomplishes this
@@ -161,8 +159,7 @@ function updateUser({ first_name, last_name, email, password, user_id }) {
         RETURNING *`,
             [first_name, last_name, email, password, user_id]
         )
-        .then((userInfo) => userInfo.rows[0])
-        .catch((error) => error);
+        .then((userInfo) => userInfo.rows[0]);
 }
 function updateUserNoPass({ first_name, last_name, email, user_id }) {
     return db
@@ -173,8 +170,7 @@ function updateUserNoPass({ first_name, last_name, email, user_id }) {
         RETURNING *`,
             [first_name, last_name, email, user_id]
         )
-        .then((userInfo) => userInfo.rows[0])
-        .catch((error) => error);
+        .then((userInfo) => userInfo.rows[0]);
 }
 function upsertUserProfile({ user_id, age, city, homepage }) {
     return db
@@ -186,15 +182,13 @@ function upsertUserProfile({ user_id, age, city, homepage }) {
         DO UPDATE SET age = $2, city = $3, homepage = $4`,
             [user_id, age ? age : null, city, homepage]
         )
-        .then((userInfo) => userInfo.rows[0])
-        .catch((error) => error);
+        .then((userInfo) => userInfo.rows[0]);
 }
 
 function deleteSignature({ user_id }) {
     return db
         .query(`DELETE FROM signatures WHERE user_id=$1`, [user_id])
-        .then((userInfo) => userInfo.rows[0])
-        .catch((error) => error);
+        .then((userInfo) => userInfo.rows[0]);
 }
 
 function getSignaturesByCity(city) {
@@ -208,8 +202,7 @@ function getSignaturesByCity(city) {
     AND user_profiles.city ILIKE $1`,
             [city]
         )
-        .then((result) => result.rows)
-        .catch((error) => error);
+        .then((result) => result.rows);
 }
 
 module.exports = {
