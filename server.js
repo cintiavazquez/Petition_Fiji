@@ -334,7 +334,7 @@ app.get("/thank-you", (request, response) => {
     getUserById(request.session.user_id)
         .then((foundUser) => foundUser)
         .then((foundUser) =>
-            getSignatureByUserID(request.session.user_i)
+            getSignatureByUserID(request.session.user_id)
                 .then((result) => {
                     console.log(result, "RESULT");
                     response.render("thank-you", {
