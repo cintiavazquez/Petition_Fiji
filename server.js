@@ -44,8 +44,6 @@ if (process.env.NODE_ENV == "production") {
     secrets = require("./secrets"); // secrets.json is in .gitignore
 }
 
-//Ⓜ️ middleware, not implemented yet
-
 app.use(
     express.urlencoded({
         extended: true,
