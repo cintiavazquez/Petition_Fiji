@@ -3,6 +3,22 @@
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+:root {
+    --dark-grey: #544b44;
+    --titles: #354538;
+    --base: #e9b000;
+    --accent: #e24e42;
+    --hyperlink: #e86e80;
+    --thinest: 100;
+    --extra-light: 200;
+    --light: 300;
+    --medium-small: 400;
+    --medium-big: 500;
+    --semi-bold: 600;
+    --bold: 700;
+    --extra-bold: 800;
+}
+
 h1 {
     color: white;
     font-size: 3rem;
