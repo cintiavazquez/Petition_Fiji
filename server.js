@@ -26,6 +26,8 @@ const {
     getSignaturesByCity,
 } = require("./db");
 
+const { checkLogin } = require("./middleware");
+
 // Cookie session 🍪
 const cookieSession = require("cookie-session");
 // const { userInfo } = require("os");
@@ -40,16 +42,6 @@ if (process.env.NODE_ENV == "production") {
 
 //Ⓜ️ middleware, not implemented yet
 
-/* function checkLogin(request, response, next) {
-    if (!request.session.user_id) {
-        console.log("not logged in!");
-        response.redirect("/login");
-        return;
-    }
-    console.log("logged in!");
-    next();
-} */
-
 /* function checkSignature(request, response, next) {
     getSignatureByUserId(request.session.userID).then((signature) => {
         if (!signature) {
@@ -59,14 +51,13 @@ if (process.env.NODE_ENV == "production") {
         }
         next();
     });
-} */
+}  */
 
 app.use(
     express.urlencoded({
         extended: true,
     })
 );
-//app.use(express.static("images"));
 
 app.use(
     cookieSession({
@@ -123,20 +114,11 @@ app.post("/register", (request, response) => {
         });
 });
 
-app.get("/profile", (request, response) => {
-    if (!request.session.user_id) {
-        response.redirect("/login");
-        return;
-    }
+app.get("/profile", checkLogin, (request, response) => {
     response.render("profile");
 });
 
-app.post("/profile", (request, response) => {
-    if (!request.session.user_id) {
-        response.redirect("/login");
-        return;
-    }
-
+app.post("/profile", checkLogin, (request, response) => {
     let user_id = request.session.user_id;
     let { age, city, homepage } = request.body;
 
@@ -152,10 +134,7 @@ app.post("/profile", (request, response) => {
         });
 });
 
-app.get("/profile/edit", (request, response) => {
-    if (!request.session.user_id) {
-        response.redirect("/login");
-    }
+app.get("/profile/edit", checkLogin, (request, response) => {
     getUserInfo({ user_id: request.session.user_id })
         .then((userInfo) => {
             response.render("profileEdit", userInfo);
@@ -166,11 +145,7 @@ app.get("/profile/edit", (request, response) => {
         });
 });
 
-app.post("/profile/edit", (request, response) => {
-    // when I edit I need to update the user table and the profile table
-    if (!request.session.user_id) {
-        response.redirect("/login");
-    }
+app.post("/profile/edit", checkLogin, (request, response) => {
     let user_id = request.session.user_id;
     let { first_name, last_name, email, password, age, city, homepage } =
         request.body;
@@ -255,13 +230,8 @@ app.get("/login", (request, response) => {
     response.render("login");
 });
 
-app.post("/petition", (request, response) => {
+app.post("/petition", checkLogin, (request, response) => {
     let user_id = request.session.user_id;
-
-    if (!request.session.user_id) {
-        response.redirect("/login");
-        return;
-    }
 
     const { signature } = request.body;
 
@@ -287,12 +257,7 @@ app.post("/petition", (request, response) => {
         });
 });
 
-app.get("/petition", (request, response) => {
-    if (!request.session.user_id) {
-        response.redirect("/login");
-        return;
-    }
-
+app.get("/petition", checkLogin, (request, response) => {
     if (request.session.signatureId) {
         response.redirect("/thank-you");
         return;
@@ -310,11 +275,7 @@ app.get("/petition", (request, response) => {
         });
 });
 
-app.get("/thank-you", (request, response) => {
-    if (!request.session.user_id) {
-        response.redirect("/login");
-        return;
-    }
+app.get("/thank-you", checkLogin, (request, response) => {
     if (!request.session.signatureId) {
         response.redirect("/petition");
         return;
@@ -362,11 +323,7 @@ app.post("/logout", (request, response) => {
     response.redirect("/");
 });
 
-app.get("/signatures", (request, response) => {
-    if (!request.session.user_id) {
-        response.redirect("/login");
-        return;
-    }
+app.get("/signatures", checkLogin, (request, response) => {
     if (!request.session.signatureId) {
         response.redirect("/petition");
         return;
@@ -384,12 +341,9 @@ app.get("/signatures", (request, response) => {
         });
 });
 
-app.get("/petition/:city", (request, response) => {
+app.get("/petition/:city", checkLogin, (request, response) => {
     let city = request.params.city;
-    if (!request.session.user_id) {
-        response.redirect("/login");
-        return;
-    }
+
     if (!request.session.signatureId) {
         response.redirect("/petition");
         return;
