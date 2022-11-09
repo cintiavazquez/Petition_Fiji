@@ -96,7 +96,6 @@ function getSignatureByUserID(user_id) {
     return db
         .query("SELECT * FROM signatures WHERE user_id=$1", [user_id])
         .then((result) => {
-            console.log("signature by user id", result.rows);
             if (!result.rows.length) {
                 throw new Error("no signature found");
             }
@@ -165,7 +164,7 @@ function updateUserNoPass({ first_name, last_name, email, user_id }) {
     return db
         .query(
             `
-        UPDATE users SET first_name=$1, last_name=$2, email=§3
+        UPDATE users SET first_name=$1, last_name=$2, email=$3
         WHERE id=$4
         RETURNING *`,
             [first_name, last_name, email, user_id]

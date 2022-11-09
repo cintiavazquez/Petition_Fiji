@@ -82,12 +82,10 @@ app.use(
 );
 
 app.get("/", (request, response) => {
-    //response.send("gotten");
     response.redirect("/register");
 });
 
 app.get("/register", (request, response) => {
-    //console.log("req body in register", request.body);
     if (request.session.user_id) {
         response.redirect("/petition");
         return;
@@ -96,8 +94,6 @@ app.get("/register", (request, response) => {
 });
 
 app.post("/register", (request, response) => {
-    console.log("POST /register", request.body);
-
     const { first_name, last_name, email, password } = request.body;
 
     if (
@@ -116,7 +112,6 @@ app.post("/register", (request, response) => {
 
     createUser({ first_name, last_name, email, password })
         .then((result) => {
-            //console.log("created user: ", result);
             if (result.constraint === "users_email_key") {
                 console.log("HERE !!!!!!!!!!!!!!!");
                 response.status(400).render("/register");
@@ -169,7 +164,6 @@ app.get("/profile/edit", (request, response) => {
     }
     getUserInfo({ user_id: request.session.user_id })
         .then((userInfo) => {
-            console.log(request.session.user_id);
             console.log("USERINFO", userInfo);
             response.render("profileEdit", userInfo);
         })
@@ -188,11 +182,16 @@ app.post("/profile/edit", (request, response) => {
     let { first_name, last_name, email, password, age, city, homepage } =
         request.body;
 
+    age = parseInt(age);
+
     upsertUserProfile({ user_id, age, city, homepage })
         .then((result) => {
             console.log(result);
         })
-        .catch((error) => console.log("could not update user", error));
+        .catch((error) =>
+            console.log("could not update user in upsertUserProfile", error)
+        );
+
     if (password === "") {
         updateUserNoPass({
             first_name,
@@ -204,7 +203,9 @@ app.post("/profile/edit", (request, response) => {
                 console.log("update no password", result);
                 response.redirect("/petition");
             })
-            .catch((error) => console.log("could not update user", error));
+            .catch((error) =>
+                console.log("could not update user in updateUserNoPass ", error)
+            );
         return;
     }
     updateUser({
@@ -214,20 +215,16 @@ app.post("/profile/edit", (request, response) => {
         password,
         user_id: request.session.user_id,
     })
-        .then((result) => {
-            console.log(result);
+        .then(() => {
             response.redirect("/petition");
         })
         .catch((error) => console.log("could not update user", error));
 });
 
 app.post("/login", (request, response) => {
-    console.log("POST /login", request.body);
-
     const { email, password } = request.body;
 
     if (!email.length || !password.length) {
-        console.log("Error: not all fields were filled");
         const error = "error";
         response.render("login", {
             error: error,
@@ -240,7 +237,7 @@ app.post("/login", (request, response) => {
         password,
     })
         .then((foundUser) => {
-            request.session.user_id = foundUser.id;
+            request.session.user_id = foundUser.user_id;
             request.session.signatureId = !!foundUser.signature;
             response.redirect("/petition");
         })
@@ -262,9 +259,8 @@ app.get("/login", (request, response) => {
 });
 
 app.post("/petition", (request, response) => {
-    console.log("POST /petition", request.body);
     let user_id = request.session.user_id;
-    //console.log("user id", user_id);
+
     if (!request.session.user_id) {
         response.redirect("/login");
         return;
@@ -280,17 +276,6 @@ app.post("/petition", (request, response) => {
         });
         return;
     }
-    /* const { first_name, last_name, signature } = request.body;
-  
-
-    if (!first_name.length || !last_name.length || !signature.length) {
-        console.log("Error: not all fields were filled");
-        const error = "error";
-        response.render("petition", {
-            error: error,
-        });
-        return;
-    } */
 
     createSignature({ user_id, signature })
         .then((result) => {
@@ -316,7 +301,17 @@ app.get("/petition", (request, response) => {
         response.redirect("/thank-you");
         return;
     }
-    response.render("petition");
+    getUserInfo({ user_id: request.session.user_id })
+        .then(() => {
+            response.render("petition");
+        })
+        .catch((error) => {
+            createUserProfile({ user_id: request.session.user_id })
+                .then(() => response.render("petition"))
+                .catch(
+                    (error) => ("/petition: error creating user profile", error)
+                );
+        });
 });
 
 app.get("/thank-you", (request, response) => {
@@ -330,7 +325,7 @@ app.get("/thank-you", (request, response) => {
     }
     //🍪
     // console.log("request.session.signatureId", request.session.signatureId);
-    console.log(request.session.user_id);
+
     getUserById(request.session.user_id)
         .then((foundUser) => foundUser)
         .then((foundUser) =>
@@ -409,7 +404,6 @@ app.get("/petition/:city", (request, response) => {
 
     getSignaturesByCity(city)
         .then((signees) => {
-            //console.log("signees", signees);
             response.render("cities", {
                 signees: signees,
                 city,

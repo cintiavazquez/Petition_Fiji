@@ -1,58 +1,49 @@
 const canvas = document.querySelector("canvas");
-
-const context = canvas.getContext("2d");
-context.strokeStyle = "purple";
-context.lineWidth = 10;
-context.lineCap = "round";
-
-let isDragging = false;
-let exportedCanvas = "";
-
-let positionY = window.pageYOffset;
-let rect = canvas.getBoundingClientRect();
-let { right, bottom, left } = rect;
-let canvasTop = rect.top;
-
 const signatureInput = document.querySelector("input[name='signature']");
 
+const context = canvas.getContext("2d");
+
+let rect = canvas.getBoundingClientRect();
+let { top: canvasTop, left: canvasLeft } = rect;
+
+let startX;
+let startY;
+
+let isDragging = false;
+
 canvas.addEventListener("mousedown", (event) => {
-    initialX = event.clientX - left;
-    initialY = event.clientY - canvasTop;
-    //console.log("mousedown");
-
-    //console.log("canvasSize", canvasSize);
-    //console.log("canvas width height", canvasWidth, canvasHeight);
-
     isDragging = true;
+    startX = event.clientX - canvasLeft;
+    startY = event.clientY - canvasTop;
 });
 
 canvas.addEventListener("mousemove", function (event) {
-    // console.log("Moving---");
-    //event.clientX gives us the horizontal pos of the mousedown
     if (!isDragging) {
         return;
     }
 
+    let actualX = event.clientX - canvasLeft;
     let actualY = event.clientY - canvasTop;
-    let actualX = event.clientX - left;
 
-    let newX = actualX - 5;
-    let newY = actualY - 5;
-
-    function draw() {
-        context.beginPath();
-        context.moveTo(actualX, actualY);
-        context.lineTo(newX, newY);
-        context.stroke();
-    }
-    draw();
-    //to export it!
-    exportedCanvas = canvas.toDataURL();
-    //console.log(exportedCanvas);
-    signatureInput.value = exportedCanvas;
-    console.log(signatureInput.value);
+    draw(actualX, actualY);
 });
 
 canvas.addEventListener("mouseup", () => {
     isDragging = false;
+
+    let exportedCanvas = canvas.toDataURL();
+    signatureInput.value = exportedCanvas;
 });
+
+function draw(x, y) {
+    context.strokeStyle = "#e86e80";
+    context.lineWidth = 5;
+    context.lineCap = "round";
+    context.beginPath();
+    context.moveTo(startX, startY);
+    context.lineTo(x, y);
+    context.stroke();
+    context.closePath();
+    startX = x;
+    startY = y;
+}
