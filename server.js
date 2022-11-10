@@ -37,6 +37,7 @@ app.use(
         // In the example above, the cookie will survive two weeks of inactivity.
     })
 );
+
 app.use(signatureRoute, userRoute);
 
 const port = process.env.PORT || 8080;

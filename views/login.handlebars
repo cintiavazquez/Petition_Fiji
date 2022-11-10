@@ -1,28 +1,41 @@
-<div class="homepage_container">
-    <h1>Please log in</h1>
+<section class="container--access">
 
-    <div class="beach"><img
-            class="beach"
-            src="../../images/beach.jpg"
-            alt="Beach"
-        /></div>
+    <img
+        class="img--access"
+        src="/images/etienne-girardet-Xh6BpT-1tXo-unsplash.jpg"
+        alt="Swimming pool in the summer"
+    />
 
-    {{#if error}}
-        <p class="validation">Incorrect username or password</p>
-    {{/if}}
-    <form action="/login" method="POST">
-        <div class="name-input">
-            <input name="email" type="email" required placeholder="E-mail" />
-            <input
-                name="password"
-                type="password"
-                required
-                placeholder="Password"
-            />
-        </div>
+    <div class="container--form">
+        {{#if error}}
+            <p class="validation">Incorrect username or password</p>
+        {{/if}}
+        <form class="access-form" action="/login" method="POST">
+            <h2>Login</h2>
+            <p>Don't have an account yet?
+                <a href="/register"> Create your account.</a></p>
 
-        <button type="submit">Log in</button>
-        <a href="/register">Not a user yet? Register here</a>
+            <div class="form__input">
+                <label for="email">E-mail</label>
+                <input
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="lovely@unicorns.com"
+                />
+            </div>
+            <div class="form__input">
+                <label for="password">Password</label>
+                <input
+                    name="password"
+                    type="password"
+                    required
+                    placeholder="****"
+                />
+            </div>
 
-    </form>
-</div>
+            <button class="button--access" type="submit">Log in</button>
+
+        </form>
+    </div>
+</section>

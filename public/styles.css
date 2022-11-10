@@ -1,9 +1,13 @@
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Lexend Deca", sans-serif;
 }
 
 :root {
+    --background: #f5f5f5;
+    --light-grey: #d5d4d4;
     --dark-grey: #544b44;
     --titles: #354538;
     --base: #e9b000;
@@ -19,27 +23,106 @@
     --extra-bold: 800;
 }
 
-.link__back {
+input:focus {
+    outline: none;
+}
+
+.body-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--background);
+}
+
+.main-title {
+    color: var(--accent);
+    position: absolute;
+    z-index: 1;
+    top: 5%;
+    left: 5%;
+    max-width: 20%;
+    font-weight: var(--extra-bold);
+    font-size: 4rem;
+}
+
+a {
     color: var(--hyperlink);
 }
 
-h1 {
-    color: white;
-    font-size: 3rem;
+.container--access {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 }
 
-.beach {
+.img--access {
+    height: 100%;
     width: 100%;
-    max-height: 80%;
-    overflow: hidden;
+    object-fit: cover;
 }
 
-img.beach {
+.container--form {
+    height: 100%;
     width: 100%;
-}
-
-.body_container {
     position: relative;
+}
+
+.access-form {
+    padding: 40px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 100%;
+    width: 100%;
+    background-color: var(--background);
+}
+
+.button--access {
+    border: none;
+    padding: 15px 15px;
+    background-color: var(--hyperlink);
+    color: white;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.form__input {
+    padding: 5px;
+    border-bottom: 2px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+}
+
+.form__input label {
+    text-transform: uppercase;
+    color: var(--light-grey);
+}
+.form__input input {
+    border: none;
+    background-color: var(--background);
+    padding: 10px;
+}
+
+.form__input input:focus {
+    background-color: var(--light-grey);
+}
+
+h2 {
+    color: var(--dark-grey);
+    font-weight: 200;
+    font-size: 2rem;
+}
+
+.link__back {
+    color: var(--hyperlink);
 }
 
 .homepage_container {
