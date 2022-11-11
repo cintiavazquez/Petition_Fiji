@@ -56,7 +56,7 @@ router.get("/thank-you", checkLogin, checkSignature, (request, response) => {
         .catch((error) => console.log("error retrieving user", error));
 });
 
-router.post("/thank-you", (request, response) => {
+router.post("/signatures/delete", (request, response) => {
     let user_id = request.session.user_id;
     deleteSignature({ user_id })
         .then(() => {
@@ -64,7 +64,10 @@ router.post("/thank-you", (request, response) => {
             response.redirect("/petition");
         })
         .catch((error) =>
-            console.log("/thank-you: error deleting the signature", error)
+            console.log(
+                "/signatures/delete error deleting the signature",
+                error
+            )
         );
 });
 

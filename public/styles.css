@@ -11,6 +11,8 @@
     --dark-grey: #544b44;
     --titles: #354538;
     --base: #e9b000;
+    --darker-base: #d19e00;
+    --lighter-base: #ffe081;
     --accent: #e24e42;
     --hyperlink: #e86e80;
     --input: rgb(228, 228, 224);
@@ -230,4 +232,72 @@ a {
 .signees-list_signee {
     display: flex;
     justify-content: space-between;
+}
+
+.hamburger-menu {
+    background-color: var(--background);
+    max-height: 0;
+    transition: 0.3s ease-in;
+    overflow: hidden;
+    position: absolute;
+    right: 10px;
+    top: 40px;
+    transform: translateY(40px);
+}
+
+.active {
+    max-height: 100%;
+}
+
+.hamburger-menu {
+    width: 30vh;
+}
+
+.menu__line--top {
+    border-top: 2px solid var(--accent);
+}
+button.menu__icon {
+    position: fixed;
+    right: 10px;
+    top: 40px;
+    height: 40px;
+    outline: none;
+    background-color: transparent;
+    border: none;
+}
+.menu__icon--bar {
+    display: block;
+    height: 5px;
+    width: 35px;
+    border-radius: 20px;
+    background-color: var(--dark-grey);
+    margin-bottom: 8px;
+}
+
+.hamburger-menu button {
+    padding: 5px;
+    outline: none;
+    border: none;
+    height: 100%;
+    width: 100%;
+    color: var(--dark-grey);
+    background-color: var(--darker-base);
+    font-weight: var(--medium-small);
+    font-size: 1rem;
+    text-align: left;
+}
+.hamburger-menu a {
+    display: block;
+    padding: 5px;
+    text-decoration: none;
+    color: var(--dark-grey);
+    background-color: var(--darker-base);
+    font-weight: var(--medium-small);
+    font-size: 1rem;
+}
+
+.hamburger-menu *:hover,
+.hamburger-menu button:hover {
+    background-color: var(--lighter-base);
+    cursor: pointer;
 }

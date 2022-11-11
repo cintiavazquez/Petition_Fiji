@@ -6,17 +6,13 @@
         alt="Swimming pool in the summer"
     />
     <div class="container--right">
+         {{> menu}}
     <h2>Thank you for signing the petition,
         {{foundUser.first_name}}
         {{foundUser.last_name}}!</h2>
         <img src="{{signature}}"></img>
     <a href="/signatures">Check who else supports this worthy cause</a>
-    <a href="/profile/edit">Update your profile here!</a>
-    <form METHOD="POST">
-        <button type="submit">Delete your signature</button>
-    </form>
-    <form action="/logout" METHOD="POST">
-        <button type="submit">Logout</button>
-    </form>
+  
+ 
     </div>
 </div>

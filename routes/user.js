@@ -207,7 +207,7 @@ router.get("/petition", checkLogin, (request, response) => {
         });
 });
 
-router.post("/logout", (request, response) => {
+router.get("/user/logout", (request, response) => {
     request.session = null;
     response.redirect("/");
 });
