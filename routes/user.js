@@ -9,6 +9,7 @@ const {
     updateUser,
     updateUserNoPass,
     upsertUserProfile,
+    getSignatures,
 } = require("../db");
 
 const { checkLogin } = require("./middleware");
@@ -188,9 +189,16 @@ router.get("/petition", checkLogin, (request, response) => {
     }
     getUserInfo({ user_id: request.session.user_id })
         .then(() => {
-            response.render("petition");
+            getSignatures()
+                .then((signatures) => {
+                    response.render("petition", {
+                        signatures: signatures.length,
+                    });
+                })
+                .catch((error) => console.log(error));
         })
         .catch((error) => {
+            console.log(error);
             createUserProfile({ user_id: request.session.user_id })
                 .then(() => response.render("petition"))
                 .catch(

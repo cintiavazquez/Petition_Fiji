@@ -1,21 +1,32 @@
-<div class="homepage_container">
-    <h1>Sign for a paid stay in Fiji for bootcamp graduates! 🏝</h1>
+<div class="container--access">
 
-    <div class="beach"><img
-            class="beach"
-            src="../../images/beach.jpg"
-            alt="Beach"
-        /></div>
+    <img
+        class="img--access"
+        src="/images/etienne-girardet-Xh6BpT-1tXo-unsplash.jpg"
+        alt="Swimming pool in the summer"
+    />
 
-    {{#if error}}
-        <p class="validation">Please fill out all the fields!</p>
-    {{/if}}
-    <form action="/petition" method="POST">
+    <div class="container--right">
+        {{#if error}}
+            <p class="validation">Please fill out all the fields!</p>
+        {{/if}}
 
-        <canvas></canvas>
+        <p>Because superhuman effort deserves a first-class reward, join our
+            endeavors to send bootcamp students (and their dedicated teachers)
+            on vacation, all expenses covered.
+        </p>
 
-        <input type="hidden" name="signature" value="" />
-        <button type="submit">Sign petition</button>
-        <script src="/script.js"></script>
-    </form>
+        {{#if signatures}}
+            <p><a href="/signatures">{{signatures}}
+                    people
+                </a>support this cause already, be next!</p>
+
+        {{/if}}
+        <form action="/petition" method="POST">
+            <canvas class="canvas--petition"></canvas>
+            <input type="hidden" name="signature" value="" />
+            <button class="button--default" type="submit">Sign</button>
+            <script src="/script.js"></script>
+        </form>
+    </div>
 </div>

@@ -65,7 +65,7 @@ a {
     object-fit: cover;
 }
 
-.container--form {
+.container--right {
     height: 100%;
     width: 100%;
     padding: 40px;
@@ -82,7 +82,7 @@ a {
     gap: 65px;
 }
 
-.button--access {
+.button--default {
     border: none;
     padding: 15px 15px;
     background-color: var(--hyperlink);
@@ -92,6 +92,7 @@ a {
     left: 0;
     width: 100%;
     font-size: 1rem;
+    cursor: pointer;
 }
 
 .form__input {
@@ -189,9 +190,18 @@ h2 {
     border-bottom: 1px solid #dfdfdf;
 }
 
-canvas {
-    justify-self: flex-end;
-    background-color: rgba(230, 183, 155, 0.282);
+.canvas--petition {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>✐</text></svg>")
+            16 0,
+        auto;
+    box-shadow: 0 0 10px var(--light-grey);
+    transform: translateX(-50%);
+    left: 50%;
+    position: relative;
+}
+
+.canvas--petition:hover {
+    box-shadow: 0 0 10px var(--base);
 }
 
 a {

@@ -68,7 +68,7 @@ router.post("/thank-you", (request, response) => {
         );
 });
 
-router.get("/signatures", checkLogin, checkSignature, (request, response) => {
+router.get("/signatures", checkLogin, (request, response) => {
     getSignatures()
         .then((signees) => {
             response.render("signatures", {
