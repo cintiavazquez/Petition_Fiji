@@ -1,20 +1,31 @@
-<div class="homepage_container">
-    <h1> 🏝</h1>
+<section>
 
-    <div class="beach"><img
-            class="beach"
-            src="../../images/beach.jpg"
-            alt="Beach"
-        /></div>
-
-    <form action="/profile" method="POST">
-        <div class="name-input">
-            <input name="age" type="number" placeholder="Age" min="10" />
-            <input name="city" placeholder="City" />
-            <input name="homepage" type="url" placeholder="homepage" />
+    <p>Want to tell us more about you?</p>
+    <form class="access-form" action="/profile" method="POST">
+        <div class="form__input">
+            <label for="age">Age</label>
+            <input name="age" type="number" placeholder="99" min="10" />
         </div>
+        <div class="form__input">
+            <label for="city">City</label>
+            <input name="city" placeholder="London" /></div>
+        <div class="form__input">
+            <label for="homepage">Homepage</label>
+            <input
+                name="homepage"
+                type="url"
+                placeholder="https://www.mywebsite.com"
+            /></div>
 
-        <button type="submit">Continue</button>
+        <button
+            class="button--default button_profile--left"
+            type="submit"
+        >Continue</button>
+        <button
+            type="button"
+            class="button--default button_profile--right"
+            data-js="button-link"
+        >Not now, <a href="/petition">take me to the petition</a></button>
 
         {{#if error}}
             <p class="validation">Error: sorry, there was an error when creating
@@ -23,8 +34,6 @@
         {{#if url_error}}
             <p class="validation">{{url_error}}</p>
         {{/if}}
-
-        <a href="/petition">Ready to sign? Do it!</a>
-
     </form>
-</div>
+    <script src="/script.js"></script>
+</section>

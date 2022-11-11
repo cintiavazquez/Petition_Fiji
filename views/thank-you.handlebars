@@ -1,9 +1,15 @@
-<div class="thank-you-page_container">
-    <h1>Thank you for signing the petition,
+<div class="main-container">
+    <h1 class="main-title">Paid vacation for bootcamp students</h1>
+    <img
+        class="img--access"
+        src="/images/etienne-girardet-Xh6BpT-1tXo-unsplash.jpg"
+        alt="Swimming pool in the summer"
+    />
+    <div class="container--right">
+    <h2>Thank you for signing the petition,
         {{foundUser.first_name}}
-        {{foundUser.last_name}}!</h1>
+        {{foundUser.last_name}}!</h2>
         <img src="{{signature}}"></img>
-
     <a href="/signatures">Check who else supports this worthy cause</a>
     <a href="/profile/edit">Update your profile here!</a>
     <form METHOD="POST">
@@ -12,4 +18,5 @@
     <form action="/logout" METHOD="POST">
         <button type="submit">Logout</button>
     </form>
+    </div>
 </div>

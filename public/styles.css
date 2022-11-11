@@ -52,7 +52,7 @@ a {
     color: var(--hyperlink);
 }
 
-.container--access {
+.main-container {
     width: 100vw;
     height: 100vh;
     display: grid;
@@ -94,7 +94,20 @@ a {
     font-size: 1rem;
     cursor: pointer;
 }
-
+.button_profile--left {
+    padding: 15px 15px;
+    background-color: var(--base);
+    width: 50%;
+}
+.button_profile--right {
+    background-color: var(--hyperlink);
+    left: 50%;
+    width: 50%;
+}
+.button_profile--right a {
+    color: white;
+    text-decoration: none;
+}
 .form__input {
     padding: 5px;
     border-bottom: 2px solid var(--accent);
@@ -143,40 +156,6 @@ h2 {
     color: red;
 }
 
-.homepage_container button {
-    grid-column: 1 / span 2;
-    font-weight: 600;
-    font-size: 1.2rem;
-    color: rgb(87, 22, 201);
-    padding: 5px;
-}
-.name-input {
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-}
-
-.thank-you-page_container {
-    background-color: rgb(26, 185, 197);
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 100vh;
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-}
-
-.thank-you-page_container a {
-    font-size: 2rem;
-    color: rgb(255, 251, 4);
-    margin-bottom: 20px;
-}
-.thank-you-page_container form {
-    position: relative;
-}
-
 .canvas--petition {
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>✐</text></svg>")
             16 0,
@@ -194,10 +173,6 @@ h2 {
 a {
     padding: 0;
     margin: 0;
-}
-
-.edit_form {
-    position: static;
 }
 
 .container_error--500 {
