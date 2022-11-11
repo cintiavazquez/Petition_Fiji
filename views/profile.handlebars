@@ -20,6 +20,9 @@
             <p class="validation">Error: sorry, there was an error when creating
                 your profile</p>
         {{/if}}
+        {{#if url_error}}
+            <p class="validation">{{url_error}}</p>
+        {{/if}}
 
         <a href="/petition">Ready to sign? Do it!</a>
 

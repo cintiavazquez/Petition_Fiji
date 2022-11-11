@@ -66,13 +66,20 @@ router.post("/profile", checkLogin, (request, response) => {
     let user_id = request.session.user_id;
     let { age, city, homepage } = request.body;
 
+    if (!homepage.startsWith("https://") || !homepage.startsWith("http://")) {
+        response.render("profile", {
+            url_error: "Please provide a valid URL",
+        });
+        return;
+    }
+
     createUserProfile({ user_id, age, city, homepage })
         .then(() => {
             response.redirect("/petition");
         })
         .catch((error) => {
             console.log("error creating user: ", error);
-            response.status(500).render("/profile", {
+            response.status(500).render("profile", {
                 error: error,
             });
         });
