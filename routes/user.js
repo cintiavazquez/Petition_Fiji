@@ -67,7 +67,7 @@ router.post("/profile", checkLogin, (request, response) => {
     let user_id = request.session.user_id;
     let { age, city, homepage } = request.body;
 
-    if (!homepage.startsWith("https://") || !homepage.startsWith("http://")) {
+    if (!homepage.startsWith("https://") && !homepage.startsWith("http://")) {
         response.render("profile", {
             url_error: "Please provide a valid URL",
         });
