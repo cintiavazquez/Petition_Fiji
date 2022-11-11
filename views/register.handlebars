@@ -1,34 +1,48 @@
-<div class="homepage_container">
-    <h1>Join our campaign to send bootcamp participants to Fiji! 🏝</h1>
+<section class="container--access">
 
-    <div class="beach"><img
-            class="beach"
-            src="../../images/beach.jpg"
-            alt="Beach"
-        /></div>
+    <img
+        class="img--access"
+        src="/images/etienne-girardet-Xh6BpT-1tXo-unsplash.jpg"
+        alt="Swimming pool in the summer"
+    />
 
-    {{#if error}}
-        <p class="validation">Please, fill all the fields</p>
-    {{/if}}
-    {{#if duplicate}}
-        <p class="validation">This user already exists</p>
-    {{/if}}
-    <form action="/register" method="POST">
-        <div class="name-input">
-            <input name="first_name" required placeholder="First Name" />
-            <input name="last_name" required placeholder="Last Name" />
-            <input name="email" type="email" required placeholder="E-mail" />
-            <input
-                name="password"
-                type="password"
-                required
-                placeholder="Password"
-            />
-        </div>
+    <div class="container--form">
+        {{#if error}}
+            <p class="validation">Please, fill all the fields</p>
+        {{/if}}
+        {{#if duplicate}}
+            <p class="validation">This user already exists</p>
+        {{/if}}
+        <h2>Register</h2>
+        <p>Already registered? <a href="/login">Log in here</a></p>
+        <form class="access-form" action="/register" method="POST">
+            <div class="name-input">
+                <div class="form__input">
+                    <label for="first_name">E-mail</label>
+                    <input name="first_name" required placeholder="John" />
+                </div>
+                <div class="form__input"><label for="last_name">E-mail</label>
+                    <input name="last_name" required placeholder="Doe" /></div>
 
-        <button type="submit">Register</button>
-
-        <a href="/login">Already registered? Log in here</a>
-
-    </form>
-</div>
+                <div class="form__input">
+                    <label for="email">E-mail</label>
+                    <input
+                        name="email"
+                        type="email"
+                        required
+                        placeholder="lovely@unicorns.com"
+                    /></div>
+                <div class="form__input">
+                    <label for="password">Password</label>
+                    <input
+                        name="password"
+                        type="password"
+                        required
+                        placeholder="****"
+                    />
+                </div>
+            </div>
+            <button class="button--access" type="submit">Register</button>
+        </form>
+    </div>
+</section>
