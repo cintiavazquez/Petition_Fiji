@@ -1,26 +1,46 @@
-<div class="signatures-page_container">
-    <h2>Good-hearted people from {{city}} who signed this petition:</h2>
+<div class="container--access">
+    <h1 class="main-title">Paid vacation for bootcamp students</h1>
+    <div class="container--left"><a href="/">Back to the petition</a></div>
+    <div class="container__right">
+        <h2>Good-hearted people from {{city}} who signed this petition:</h2>
+        {{#if signees}}
+            <section class="signees-list">
+                {{#each signees}}
+                    <section class="signees-list_signee">
+                        {{#if homepage}}
+                            {{#if age}}
+                                <p><a
+                                        href="{{homepage}}"
+                                        target="_blank"
+                                    >{{first_name}}
+                                        {{last_name}}
+                                    </a>,
+                                    {{age}}
+                                </p>
+                            {{else}}
+                                <p><a
+                                        href="{{homepage}}"
+                                        target="_blank"
+                                    >{{first_name}}
+                                        {{last_name}}
+                                    </a>
+                                </p>
+                            {{/if}}
+                        {{else}}
+                            {{#if age}}
+                                <p>{{first_name}}
+                                    {{last_name}},
+                                    {{age}}, from</p>
+                            {{else}}
+                                <p>{{first_name}} {{last_name}}</p>
+                            {{/if}}
+                        {{/if}}
+                    </section>
+                {{/each}}
+            </section>
+        {{else}}
+            <p>Nobody wants to pay for your vacation...</p>
+        {{/if}}
+    </div>
 
-    {{#if signees}}
-        <section class="signees-list">
-            {{#each signees}}
-
-                {{#if homepage}}
-                    <a href="{{homepage}}">{{first_name}} {{last_name}}</a>
-                    <p>{{age}}</p>
-
-                {{else}}
-                    <p>{{first_name}} {{last_name}}</p>
-                    <p>{{age}}</p>
-
-                {{/if}}
-
-            {{/each}}
-
-        </section>
-
-        <a href="/">Back to the petition</a>
-    {{else}}
-        <p>Nobody wants to pay for your vacation...</p>
-    {{/if}}
 </div>

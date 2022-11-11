@@ -176,17 +176,6 @@ h2 {
 .thank-you-page_container form {
     position: relative;
 }
-.signatures-page_container {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.signees-list {
-}
-.signatures-page_container p {
-    border-bottom: 1px solid #dfdfdf;
-}
 
 .canvas--petition {
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>✐</text></svg>")
@@ -240,19 +229,19 @@ a {
     left: 10%;
 }
 
-.container__signatures--right {
+.container__right {
     background-color: var(--base);
     padding: 40px;
 }
 
-.container__signatures--right h2 {
+.container__right h2 {
     margin-bottom: 10%;
 }
-.container__signatures--right a {
+.container__right a {
     color: white;
     font-weight: var(--extra-light);
 }
-.container__signatures--right p {
+.container__right p {
     font-weight: var(--medium-small);
     margin-bottom: 5%;
 }
