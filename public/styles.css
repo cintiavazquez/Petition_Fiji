@@ -183,8 +183,6 @@ h2 {
 }
 
 .signees-list {
-    display: grid;
-    grid-template-columns: repeat(3, auto);
 }
 .signatures-page_container p {
     border-bottom: 1px solid #dfdfdf;
@@ -194,14 +192,14 @@ h2 {
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>✐</text></svg>")
             16 0,
         auto;
-    box-shadow: 0 0 10px var(--light-grey);
+    box-shadow: 0 0 5px var(--light-grey);
     transform: translateX(-50%);
     left: 50%;
     position: relative;
 }
 
 .canvas--petition:hover {
-    box-shadow: 0 0 10px var(--base);
+    box-shadow: 0 0 10px var(--light-grey);
 }
 
 a {
@@ -228,4 +226,42 @@ a {
     object-fit: contain;
     max-width: 100%;
     max-height: 100%;
+}
+
+.container--left {
+    width: 50vw;
+    height: 100%;
+    position: relative;
+}
+
+.container--left a {
+    position: absolute;
+    bottom: 10%;
+    left: 10%;
+}
+
+.container__signatures--right {
+    background-color: var(--base);
+    padding: 40px;
+}
+
+.container__signatures--right h2 {
+    margin-bottom: 10%;
+}
+.container__signatures--right a {
+    color: white;
+    font-weight: var(--extra-light);
+}
+.container__signatures--right p {
+    font-weight: var(--medium-small);
+    margin-bottom: 5%;
+}
+
+.signees-link--city {
+    text-transform: capitalize;
+}
+
+.signees-list_signee {
+    display: flex;
+    justify-content: space-between;
 }

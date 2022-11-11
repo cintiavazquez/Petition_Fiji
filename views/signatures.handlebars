@@ -1,26 +1,64 @@
-<div class="signatures-page_container">
-    <h2>Good-hearted people who signed this petition:</h2>
+<div class="container--access">
+    <div class="container--left"><a href="/">Back to the petition</a></div>
+    <div class="container__signatures--right">
+        <h2>Good-hearted people who signed this petition:</h2>
 
-    {{#if signees}}
-        <section class="signees-list">
-            {{#each signees}}
+        {{#if signees}}
+            <article class="signees-list">
+                {{#each signees}}
+                    <section class="signees-list_signee">
+                        {{#if homepage}}
+                            {{#if age}}
+                                <p><a
+                                        href="{{homepage}}"
+                                        target="_blank"
+                                    >{{first_name}}
+                                        {{last_name}}
+                                    </a>,
+                                    {{age}}
+                                </p>
+                                <a
+                                    class="signees-link--city"
+                                    href="/petition/{{city}}"
+                                >{{city}}</a>
+                            {{else}}
+                                <p><a
+                                        href="{{homepage}}"
+                                        target="_blank"
+                                    >{{first_name}}
+                                        {{last_name}}
+                                    </a>
+                                </p>
+                                <a
+                                    class="signees-link--city"
+                                    href="/petition/{{city}}"
+                                >{{city}}</a>
+                            {{/if}}
 
-                {{#if homepage}}
-                    <a href="{{homepage}}">{{first_name}} {{last_name}}</a>
-                    <p>{{age}}</p>
-                    <a href="/petition/{{city}}">{{city}}</a>
-                {{else}}
-                    <p>{{first_name}} {{last_name}}</p>
-                    <p>{{age}}</p>
-                    <a href="/petition/{{city}}">{{city}}</a>
-                {{/if}}
+                        {{else}}
+                            {{#if age}}
+                                <p>{{first_name}}
+                                    {{last_name}},
+                                    {{age}}, from</p>
+                                <a
+                                    class="signees-link--city"
+                                    href="/petition/{{city}}"
+                                >{{city}}</a>
+                            {{else}}
+                                <p>{{first_name}} {{last_name}}</p>
+                                <a
+                                    class="signees-link--city"
+                                    href="/petition/{{city}}"
+                                >{{city}}</a>
+                            {{/if}}
+                        {{/if}}
+                    </section>
+                {{/each}}
 
-            {{/each}}
+            </article>
 
-        </section>
-
-        <a href="/">Back to the petition</a>
-    {{else}}
-        <p>Nobody wants to pay for your vacation...</p>
-    {{/if}}
+        {{else}}
+            <p>Nobody wants to pay for your vacation...</p>
+        {{/if}}
+    </div>
 </div>
