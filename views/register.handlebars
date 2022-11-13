@@ -6,7 +6,7 @@
         alt="Swimming pool in the summer"
     />
 
-    <div class="container--right">
+    <div class="container--flex">
         {{#if error}}
             <p class="validation">Please, fill all the fields</p>
         {{/if}}
@@ -16,9 +16,9 @@
         <h2>Register</h2>
         <p>Already registered? <a href="/login">Log in here</a></p>
         <form class="access-form" action="/register" method="POST">
-            <div class="name-input">
+            <div>
                 <div class="form__input">
-                    <label for="first_name">First ame</label>
+                    <label for="first_name">First name</label>
                     <input name="first_name" required placeholder="John" />
                 </div>
                 <div class="form__input"><label for="last_name">Last name</label>

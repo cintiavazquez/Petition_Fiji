@@ -68,7 +68,7 @@ a {
     object-fit: cover;
 }
 
-.container--right {
+.container--flex {
     height: 100%;
     width: 100%;
     padding: 40px;
@@ -97,6 +97,12 @@ a {
     font-size: 1rem;
     cursor: pointer;
 }
+
+.button--edit {
+    background-color: var(--accent);
+    width: 50%;
+}
+
 .button_profile--left {
     padding: 15px 15px;
     background-color: var(--base);
@@ -126,6 +132,10 @@ a {
     border: none;
     background-color: var(--background);
     padding: 10px;
+}
+
+.edit_form .form__input input {
+    background-color: var(--base);
 }
 
 .form__input input:focus {
@@ -196,13 +206,16 @@ a {
     max-height: 100%;
 }
 
-.container--left {
+.container--plain {
     width: 50vw;
     height: 100%;
     position: relative;
 }
+.container--plain.container--edit a {
+    position: static;
+}
 
-.container--left a {
+.container--plain a {
     position: absolute;
     bottom: 10%;
     left: 10%;
@@ -258,12 +271,13 @@ a {
 }
 button.menu__icon {
     position: fixed;
-    right: 10px;
+    right: 40px;
     top: 40px;
     height: 40px;
     outline: none;
     background-color: transparent;
     border: none;
+    cursor: pointer;
 }
 .menu__icon--bar {
     display: block;
@@ -300,4 +314,8 @@ button.menu__icon {
 .hamburger-menu button:hover {
     background-color: var(--lighter-base);
     cursor: pointer;
+}
+
+.edit_form label {
+    color: white;
 }

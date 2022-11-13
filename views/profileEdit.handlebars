@@ -1,32 +1,49 @@
 <div class="main-container">
     <div class="container__right">
         <h2>Edit your profile</h2>
+        {{#if error}}
+            <p class="validation">Either you didnt fill all the fields or the
+                information doesnt match any user</p>
+        {{/if}}
+        <form class="edit_form" action="/profile/edit" method="POST">
+            <div>
+                <div class="form__input">
+                    <label for="first_name">First name</label>
+                    <input name="first_name" required value="{{first_name}}" />
+                </div>
+                <div class="form__input">
+                    <label for="last_name">Last name</label>
+                    <input name="last_name" required value="{{last_name}}" />
+                </div>
+                <div class="form__input">
+                    <label for="email">E-mail</label>
+                    <input name="email" type="email" required value="{{email}}" />
+                </div>
+                <div class="form__input">
+                    <label for="password">Password</label>
+                    <input
+                        name="password"
+                        type="password"
+                        placeholder="Password"
+                    />
+                </div>
+                <div class="form__input">
+                    <label for="age">Age</label>
+                    <input name="age" type="number" value="{{age}}" />
+                </div>
+                <div class="form__input">
+                    <label for="city">City</label>
+                    <input name="city" value="{{city}}" />
+                </div>
 
-    {{#if error}}
-        <p class="validation">Either you didnt fill all the fields or the
-            information doesnt match any user</p>
-    {{/if}}
-    <form class="edit_form" action="/profile/edit" method="POST">
-       <div class="name-input">
-            <input name="first_name" required value="{{first_name}}" />
-            <input name="last_name" required value="{{last_name}}" />
-            <input name="email" type="email" required value="{{email}}" />
-            <input
-                name="password"
-                type="password"
-                placeholder="Password"
-            />
-            <input name="age" type="number" value="{{age}}" />
-            <input name="city" value="{{city}}"  />
-            <input name="homepage" type="url" value="{{homepage}}" />
-        </div>
-        <button type="submit">Update</button>
-    </form>
-        </div>
+                <div class="form__input">
+                    <label for="homepage">Homepage</label>
+                    <input name="homepage" type="url" value="{{homepage}}" />
+                </div>
+            </div>
+            <button class="button--default button--edit" type="submit">Update</button>
+        </form>
+    </div>
 
-
- 
-<div class="container--left">{{> menu}}<a href="/">Back to the petition</a></div>
-
-    
+    <div class="container--plain container--edit">{{> menu}}</div>
 </div>
