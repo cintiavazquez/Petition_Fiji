@@ -106,7 +106,7 @@ router.post("/profile/edit", checkLogin, (request, response) => {
 
     upsertUserProfile({ user_id, age, city, homepage })
         .then((result) => {
-            console.log(result);
+            console.log("result in upsert user profile:", result);
         })
         .catch((error) =>
             console.log(

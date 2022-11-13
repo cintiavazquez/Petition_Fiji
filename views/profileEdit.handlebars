@@ -1,5 +1,6 @@
-<div class="homepage_container">
-    <h1>Edit your user information</h1>
+<div class="main-container">
+    <div class="container__right">
+        <h2>Edit your profile</h2>
 
     {{#if error}}
         <p class="validation">Either you didnt fill all the fields or the
@@ -19,9 +20,13 @@
             <input name="city" value="{{city}}"  />
             <input name="homepage" type="url" value="{{homepage}}" />
         </div>
-        </div>
-
         <button type="submit">Update</button>
     </form>
-<a href="/petition">Go back</a>
+        </div>
+
+
+ 
+<div class="container--left">{{> menu}}<a href="/">Back to the petition</a></div>
+
+    
 </div>
