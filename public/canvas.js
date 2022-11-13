@@ -36,8 +36,8 @@ canvas.addEventListener("mouseup", () => {
 });
 
 function draw(x, y) {
-    context.strokeStyle = "#e86e80";
-    context.lineWidth = 5;
+    context.strokeStyle = "#354538";
+    context.lineWidth = 1;
     context.lineCap = "round";
     context.beginPath();
     context.moveTo(startX, startY);
