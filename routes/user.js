@@ -67,7 +67,12 @@ router.post("/profile", checkLogin, (request, response) => {
     let user_id = request.session.user_id;
     let { age, city, homepage } = request.body;
 
-    if (!homepage.startsWith("https://") && !homepage.startsWith("http://")) {
+    if (
+        !homepage.startsWith("https://") &&
+        !homepage.startsWith("http://") &&
+        homepage !== ""
+    ) {
+        console.log("/profile: url not valid");
         response.render("profile", {
             url_error: "Please provide a valid URL",
         });
@@ -162,6 +167,7 @@ router.post("/login", (request, response) => {
         password,
     })
         .then((foundUser) => {
+            console.log("here,", foundUser);
             request.session.user_id = foundUser.user_id;
             request.session.signatureId = !!foundUser.signature;
             response.redirect("/petition");
