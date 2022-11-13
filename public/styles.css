@@ -26,10 +26,6 @@
     --extra-bold: 800;
 }
 
-input:focus {
-    outline: none;
-}
-
 .body-container {
     position: relative;
     display: flex;
@@ -49,6 +45,10 @@ input:focus {
     max-width: 20%;
     font-weight: var(--extra-bold);
     font-size: 4rem;
+}
+
+input:focus {
+    outline: none;
 }
 
 a {
@@ -269,6 +269,7 @@ a {
 .menu__line--top {
     border-top: 4px solid var(--dark-grey);
 }
+
 button.menu__icon {
     position: fixed;
     right: 40px;
