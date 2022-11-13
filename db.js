@@ -150,15 +150,17 @@ function getUserInfo({ user_id }) {
 //"upsert" - we want to insert a row if one does not already exist and update it if it does. Postgres has syntax that accomplishes this
 
 function updateUser({ first_name, last_name, email, password, user_id }) {
-    return db
-        .query(
-            `
+    return hash(password).then((password_hash) => {
+        return db
+            .query(
+                `
         UPDATE users SET first_name=$1, last_name=$2, email=$3, password_hash=$4
         WHERE id=$5
         RETURNING *`,
-            [first_name, last_name, email, password, user_id]
-        )
-        .then((userInfo) => userInfo.rows[0]);
+                [first_name, last_name, email, password_hash, user_id]
+            )
+            .then((userInfo) => userInfo.rows[0]);
+    });
 }
 function updateUserNoPass({ first_name, last_name, email, user_id }) {
     return db
