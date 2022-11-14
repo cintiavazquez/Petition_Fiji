@@ -17,7 +17,7 @@ if (!process.env.DATABASE_URL) {
         `postgres:${DATABASE_USER}:${DATABASE_PASSWORD}@localhost:5432/${DATABASE_NAME}`
     );
 } else {
-    // we are running on Heroku
+    // we are deploying
     db = spicedPg(process.env.DATABASE_URL);
 }
 

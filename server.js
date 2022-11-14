@@ -1,5 +1,6 @@
 // express + handlebars setup
 const express = require("express");
+const helmet = require("helmet");
 const app = express();
 const path = require("path");
 app.use(express.static(path.join(__dirname, "public")));
@@ -21,6 +22,8 @@ if (process.env.NODE_ENV == "production") {
 
 const signatureRoute = require("./routes/signatures");
 const userRoute = require("./routes/user");
+
+app.use(helmet());
 
 app.use(
     express.urlencoded({
