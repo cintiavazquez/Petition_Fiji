@@ -83,25 +83,20 @@ router.get("/signatures", checkLogin, (request, response) => {
         });
 });
 
-router.get(
-    "/petition/:city",
-    checkLogin,
-    checkSignature,
-    (request, response) => {
-        let city = request.params.city;
+router.get("/petition/:city", checkLogin, (request, response) => {
+    let city = request.params.city;
 
-        getSignaturesByCity(city)
-            .then((signees) => {
-                response.render("cities", {
-                    signees: signees,
-                    city,
-                });
-            })
-            .catch((error) => {
-                console.log("/petition/:city: error displaying signers", error);
-                response.status(404);
+    getSignaturesByCity(city)
+        .then((signees) => {
+            response.render("cities", {
+                signees: signees,
+                city,
             });
-    }
-);
+        })
+        .catch((error) => {
+            console.log("/petition/:city: error displaying signers", error);
+            response.status(404);
+        });
+});
 
 module.exports = router;
