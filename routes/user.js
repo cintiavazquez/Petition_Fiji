@@ -47,6 +47,7 @@ router.post("/register", (request, response) => {
         .then((result) => {
             console.log("result of creating user", result);
             request.session.user_id = result.id;
+            request.session.registry = true;
             response.redirect("/profile");
         })
         .catch((error) => {
@@ -60,6 +61,10 @@ router.post("/register", (request, response) => {
 });
 
 router.get("/profile", checkLogin, (request, response) => {
+    if (!request.session.registry) {
+        response.redirect("/profile/edit");
+    }
+    request.session.registry = null;
     response.render("profile");
 });
 
