@@ -135,7 +135,7 @@ function getUserInfo({ user_id }) {
             `SELECT users.first_name, users.last_name, users.email, user_profiles.*
             FROM users
             FULL JOIN user_profiles
-            ON user_profiles.user_id = users.id
+            ON users.id=user_profiles.user_id
             WHERE user_id=$1`,
             [user_id]
         )
