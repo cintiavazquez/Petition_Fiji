@@ -45,7 +45,7 @@ router.post("/register", (request, response) => {
 
     createUser({ first_name, last_name, email, password })
         .then((result) => {
-            //🍪
+            console.log("result of creating user", result);
             request.session.user_id = result.id;
             response.redirect("/profile");
         })
@@ -65,6 +65,7 @@ router.get("/profile", checkLogin, (request, response) => {
 
 router.post("/profile", checkLogin, (request, response) => {
     let user_id = request.session.user_id;
+    console.log("user_id in /profile", user_id);
     let { age, city, homepage } = request.body;
 
     if (
@@ -168,7 +169,7 @@ router.post("/login", (request, response) => {
     })
         .then((foundUser) => {
             console.log("here,", foundUser);
-            request.session.user_id = foundUser.user_id;
+            request.session.user_id = foundUser.id;
             request.session.signatureId = !!foundUser.signature;
             response.redirect("/petition");
         })
@@ -204,12 +205,7 @@ router.get("/petition", checkLogin, (request, response) => {
                 .catch((error) => console.log(error));
         })
         .catch((error) => {
-            console.log(error);
-            createUserProfile({ user_id: request.session.user_id })
-                .then(() => response.render("petition"))
-                .catch(
-                    (error) => ("/petition: error creating user profile", error)
-                );
+            console.log("/petition: error in getUserInfo", error);
         });
 });
 

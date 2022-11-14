@@ -77,7 +77,7 @@ function login({ email, password }) {
 function getUserByEmail(email) {
     return db
         .query(
-            `SELECT * 
+            `SELECT signatures.id AS signature_id,signatures.user_id, signatures.signature, users.*
         FROM users 
         FULL OUTER JOIN signatures
         ON users.id=signatures.user_id 
@@ -136,7 +136,7 @@ function getUserInfo({ user_id }) {
             FROM users
             FULL JOIN user_profiles
             ON users.id=user_profiles.user_id
-            WHERE user_id=$1`,
+            WHERE users.id=$1`,
             [user_id]
         )
         .then((userInfo) => {
