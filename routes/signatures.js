@@ -39,7 +39,6 @@ router.post("/petition", checkLogin, (request, response) => {
 
 router.get("/thank-you", checkLogin, checkSignature, (request, response) => {
     getUserById(request.session.user_id)
-        .then((foundUser) => foundUser)
         .then((foundUser) =>
             getSignatureByUserID(request.session.user_id)
                 .then((result) => {
