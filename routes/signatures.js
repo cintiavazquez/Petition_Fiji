@@ -42,6 +42,15 @@ router.get("/thank-you", checkLogin, checkSignature, (request, response) => {
         .then((foundUser) =>
             getSignatureByUserID(request.session.user_id)
                 .then((result) => {
+                    if (request.session.edited) {
+                        request.session.edited = null;
+                        response.render("thank-you", {
+                            signature: result.signature,
+                            foundUser,
+                            edited: true,
+                        });
+                        return;
+                    }
                     response.render("thank-you", {
                         signature: result.signature,
                         foundUser,

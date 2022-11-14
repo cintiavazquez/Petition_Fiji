@@ -7,10 +7,15 @@
     />
     <div class="container--flex">
          {{> menu}}
+         {{#if edited}}
+        <p class="editFade">Your information has been updated</p>
+        <div class="editLoad"></div>
+        {{/if}}
     <h2>Thank you for signing the petition,
         {{foundUser.first_name}}
         {{foundUser.last_name}}!</h2>
         <img src="{{signature}}"></img>
+        
     <p><a href="/signatures">Check out other supporters</a> of this worthy cause</p>
   
  

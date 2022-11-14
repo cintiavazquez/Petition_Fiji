@@ -1,9 +1,8 @@
 <div class="main-container main-container--edit">
     <div class="container__right">
         <h2>Edit your profile</h2>
-        {{#if error}}
-            <p class="validation">Either you didnt fill all the fields or the
-                information doesnt match any user</p>
+        {{#if url_error}}
+            <p class="validation">{{url_error}}</p>
         {{/if}}
         <form class="edit_form" action="/profile/edit" method="POST">
             <div>
@@ -42,6 +41,7 @@
                 </div>
             </div>
             <button class="button--default button--edit" type="submit">Update</button>
+            
         </form>
     </div>
 

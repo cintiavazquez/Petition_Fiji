@@ -31,3 +31,28 @@ document.body.addEventListener("click", () => {
         console.log(error);
     }
 });
+
+try {
+    const editFade = document.querySelector("p.editFade");
+    const editLoad = document.querySelector("div.editLoad");
+
+    let width = editLoad.offsetWidth;
+
+    setTimeout(() => {
+        editFade.style.opacity = 0;
+    }, 2000);
+
+    setInterval(() => {
+        if (width === 0) {
+            return;
+        }
+        decreaseWidth();
+    }, 8);
+
+    function decreaseWidth() {
+        width--;
+        editLoad.style.width = width + "px";
+    }
+} catch (error) {
+    console.log(error);
+}

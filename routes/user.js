@@ -115,6 +115,18 @@ router.post("/profile/edit", checkLogin, (request, response) => {
 
     age = parseInt(age);
 
+    if (
+        !homepage.startsWith("https://") &&
+        !homepage.startsWith("http://") &&
+        homepage !== ""
+    ) {
+        console.log("/profile/edit: url not valid");
+        response.render("profileEdit", {
+            url_error: "Please provide a valid URL",
+        });
+        return;
+    }
+
     upsertUserProfile({ user_id, age, city, homepage })
         .then((result) => {
             console.log("result in upsert user profile:", result);
@@ -134,6 +146,7 @@ router.post("/profile/edit", checkLogin, (request, response) => {
             user_id: request.session.user_id,
         })
             .then(() => {
+                request.session.edited = true;
                 response.redirect("/petition");
             })
             .catch((error) =>
@@ -203,6 +216,14 @@ router.get("/petition", checkLogin, (request, response) => {
         .then(() => {
             getSignatures()
                 .then((signatures) => {
+                    if (request.session.edited) {
+                        request.session.edited = null;
+                        response.render("petition", {
+                            signatures: signatures.length,
+                            edited: true,
+                        });
+                        return;
+                    }
                     response.render("petition", {
                         signatures: signatures.length,
                     });

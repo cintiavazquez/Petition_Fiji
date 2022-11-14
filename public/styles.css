@@ -16,6 +16,7 @@
     --accent: #e24e42;
     --hyperlink: #e86e80;
     --input: rgb(228, 228, 224);
+    --user-feedback: rgb(94, 231, 94);
     --thinest: 100;
     --extra-light: 200;
     --light: 300;
@@ -90,7 +91,7 @@ a {
     padding: 15px 15px;
     background-color: var(--hyperlink);
     color: white;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -306,8 +307,23 @@ button.menu__icon {
     color: var(--dark-grey);
 }
 
+.edit_form {
+    margin-bottom: 20px;
+}
+
 .edit_form label {
     color: white;
+}
+
+.editLoad {
+    display: block;
+    width: 200px;
+    height: 2px;
+    background-color: var(--user-feedback);
+}
+
+.editFade {
+    color: var(--user-feedback);
 }
 
 @media only screen and (max-width: 768px) {

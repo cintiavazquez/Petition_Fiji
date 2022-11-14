@@ -8,9 +8,14 @@
 
     <div class="container--flex">
          {{> menu}}
+          {{#if edited}}
+        <p class="editFade">Your information has been updated</p>
+        <div class="editLoad"></div>
+        {{/if}}
         {{#if error}}
             <p class="validation">Please fill out all the fields!</p>
         {{/if}}
+
 
         <p>Because superhuman effort deserves a first-class reward, join our
             endeavors to send bootcamp students (and their dedicated teachers)
