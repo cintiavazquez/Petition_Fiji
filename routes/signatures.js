@@ -27,7 +27,7 @@ router.post("/petition", checkLogin, (request, response) => {
     createSignature({ user_id, signature })
         .then((result) => {
             console.log("created signature: ", result);
-            //🍪
+
             request.session.signatureId = result.id;
             response.redirect("/thank-you");
         })

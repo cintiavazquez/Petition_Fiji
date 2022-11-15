@@ -1,29 +1,29 @@
 // express + handlebars setup
 const express = require("express");
-const helmet = require("helmet");
 const app = express();
 const path = require("path");
-app.use(express.static(path.join(__dirname, "public")));
 const { engine } = require("express-handlebars");
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 
-// Cookie session 🍪
+const helmet = require("helmet");
+
 const cookieSession = require("cookie-session");
 // const { userInfo } = require("os");
 
-//let { SESSION_SECRET } = require("./secrets.json");
 let secrets;
 if (process.env.NODE_ENV == "production") {
     secrets = process.env; // in prod the secrets are environment variables
 } else {
-    secrets = require("./secrets"); // secrets.json is in .gitignore
+    secrets = require("./secrets");
 }
 
 const signatureRoute = require("./routes/signatures");
 const userRoute = require("./routes/user");
 
 app.use(helmet());
+
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
     express.urlencoded({
@@ -36,8 +36,7 @@ app.use(
         //secret: process.env.SESSION_SECRET,
         secret: secrets.SESSION_SECRET,
         maxAge: 1000 * 60 * 60 * 24 * 14,
-        //this determines how long to store the cookie for
-        // In the example above, the cookie will survive two weeks of inactivity.
+        //the cookie will survive two weeks of inactivity.
     })
 );
 

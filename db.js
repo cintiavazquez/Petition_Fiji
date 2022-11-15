@@ -1,12 +1,6 @@
 const spicedPg = require("spiced-pg");
 
 //spiced-pg is a simple wrapper around the node-postgres package (aka pg) that was created for use in this course. Using it ensures that you do not create too many database connections and that the process of deploying your project will be fairly straightforward. When you do this, spiced-pg will create a pool of 10 connections to the specified database. These connections will close after 30 seconds of inactivity but will be reopened when activity resumes. If you call the function again with the same string, no new connections will be created.
-//👵🏻 old
-/* const { DATABASE_USER, DATABASE_PASSWORD } = require("./secrets.json");
-const DATABASE_NAME = "petition";
-const db = spicedPg(
-    `postgres:${DATABASE_USER}:${DATABASE_PASSWORD}@localhost:5432/${DATABASE_NAME}`
-); */
 
 let db;
 if (!process.env.DATABASE_URL) {
@@ -103,7 +97,6 @@ function getSignatureByUserID(user_id) {
         });
 }
 
-//For the signatures page: we want only users who have signed, and we want both users with the minimal info and with the extra info
 function getSignatures() {
     return db
         .query(
@@ -128,7 +121,6 @@ function createSignature({ user_id, signature }) {
         .then((result) => result.rows[0]);
 }
 
-//populating the edit profile form
 function getUserInfo({ user_id }) {
     return db
         .query(
@@ -209,13 +201,11 @@ function getSignaturesByCity(city) {
 module.exports = {
     getSignatures,
     createSignature,
-    //getSignaturesByID,
     getSignatureByUserID,
     createUser,
     getUserByEmail,
     login,
     getUserById,
-    //getUserList,
     createUserProfile,
     getUserInfo,
     updateUser,
