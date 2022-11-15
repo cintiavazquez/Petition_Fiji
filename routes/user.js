@@ -12,21 +12,49 @@ const {
     getSignatures,
 } = require("../db");
 
-const { checkLogin } = require("./middleware");
+const { checkLogin, checkLogout } = require("./middleware");
 
 router.get("/", (request, response) => {
     response.redirect("/register");
 });
 
-router.get("/register", (request, response) => {
-    if (request.session.user_id) {
-        response.redirect("/petition");
+router.get("/login", checkLogout, (request, response) => {
+    response.render("login");
+});
+router.post("/login", checkLogout, (request, response) => {
+    const { email, password } = request.body;
+
+    if (!email.length || !password.length) {
+        const error = "error";
+        response.render("login", {
+            error: error,
+        });
         return;
     }
+
+    login({
+        email,
+        password,
+    })
+        .then((foundUser) => {
+            console.log("here,", foundUser);
+            request.session.user_id = foundUser.id;
+            request.session.signatureId = !!foundUser.signature;
+            response.redirect("/petition");
+        })
+        .catch((error) => {
+            console.log("error logging in", error);
+            response.render("login", {
+                error: error,
+            });
+        });
+});
+
+router.get("/register", checkLogout, (request, response) => {
     response.render("register");
 });
 
-router.post("/register", (request, response) => {
+router.post("/register", checkLogout, (request, response) => {
     const { first_name, last_name, email, password } = request.body;
 
     if (
@@ -170,43 +198,6 @@ router.post("/profile/edit", checkLogin, (request, response) => {
         .catch((error) => console.log("could not update user", error));
 });
 
-router.post("/login", (request, response) => {
-    const { email, password } = request.body;
-
-    if (!email.length || !password.length) {
-        const error = "error";
-        response.render("login", {
-            error: error,
-        });
-        return;
-    }
-
-    login({
-        email,
-        password,
-    })
-        .then((foundUser) => {
-            console.log("here,", foundUser);
-            request.session.user_id = foundUser.id;
-            request.session.signatureId = !!foundUser.signature;
-            response.redirect("/petition");
-        })
-        .catch((error) => {
-            console.log("error logging in", error);
-            response.render("login", {
-                error: error,
-            });
-        });
-});
-
-router.get("/login", (request, response) => {
-    if (request.session.user_id) {
-        response.redirect("/petition");
-        return;
-    }
-    response.render("login");
-});
-
 router.get("/petition", checkLogin, (request, response) => {
     if (request.session.signatureId) {
         response.redirect("/thank-you");
@@ -235,7 +226,7 @@ router.get("/petition", checkLogin, (request, response) => {
         });
 });
 
-router.get("/user/logout", (request, response) => {
+router.get("/user/logout", checkLogin, (request, response) => {
     request.session = null;
     response.redirect("/");
 });

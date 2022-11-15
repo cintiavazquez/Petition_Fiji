@@ -6,6 +6,14 @@ function checkLogin(request, response, next) {
     next();
 }
 
+function checkLogout(request, response, next) {
+    if (request.session.user_id) {
+        response.redirect("/petition");
+        return;
+    }
+    next();
+}
+
 function checkSignature(request, response, next) {
     if (!request.session.signatureId) {
         response.redirect("/petition");
@@ -14,4 +22,4 @@ function checkSignature(request, response, next) {
     next();
 }
 
-module.exports = { checkLogin, checkSignature };
+module.exports = { checkLogin, checkSignature, checkLogout };
