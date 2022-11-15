@@ -43,4 +43,10 @@ app.use(
 app.use(signatureRoute, userRoute);
 
 const port = process.env.PORT || 8080;
-app.listen(port, () => console.log(`Listening on http://localhost:${port} 🎈`));
+if (require.main == module) {
+    app.listen(port, () =>
+        console.log(`Listening on http://localhost:${port} 🎈`)
+    );
+}
+
+module.exports = app;
