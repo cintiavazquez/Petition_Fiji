@@ -87,6 +87,12 @@ router.post(
 router.get("/signatures", checkLogin, (request, response) => {
     getSignatures()
         .then((signees) => {
+            for (let key in signees) {
+                if (signees[key].city) {
+                    signees[key].city = signees[key].city.toLowerCase();
+                }
+            }
+
             response.render("signatures", {
                 signees: signees,
             });
